@@ -38,15 +38,6 @@ Shows at bottom of Claude Code:
 | **commit-validator.sh** | PreToolUse (Bash) | Enforces conventional commits, max 72 chars, blocks `--force` |
 | **save-summary** | SessionEnd | AI-generated session summary saved to `~/.claude/session-logs/` |
 
-### Plugins
-
-Run these after installing:
-```bash
-/plugin marketplace add emdashcodes/claude-code-plugins
-/plugin install google-calendar@emdashcodes-claude-code-plugins
-/google-calendar:setup
-```
-
 ## Installation
 
 ### New Machine Setup
