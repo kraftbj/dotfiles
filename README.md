@@ -2,6 +2,8 @@
 
 Personal dotfiles and configuration for [Claude Code](https://claude.ai/code).
 
+License: GPL-2.0-or-later
+
 ## Structure
 
 ```
