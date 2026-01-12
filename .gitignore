@@ -4,3 +4,6 @@
 # Editor files
 *.swp
 *~
+
+# Local Claude settings (per-project)
+.claude/

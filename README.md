@@ -6,25 +6,44 @@ Personal dotfiles and configuration for [Claude Code](https://claude.ai/code).
 
 ```
 .
-├── CLAUDE.md           # Global instructions for Claude
-├── settings.json       # Claude Code settings with hooks
+├── CLAUDE.md              # Global instructions for Claude
+├── settings.json          # Claude Code settings with hooks + status line
+├── statusline.sh          # Status bar showing model, context %, git branch
 ├── hooks/
-│   └── notify-waiting.sh  # Notification when Claude waits for input
-└── install.sh          # Setup script for new machines
+│   ├── notify-waiting.sh  # Bell + iTerm bounce + macOS notification
+│   ├── session-context.sh # Injects git status/commits at session start
+│   ├── commit-validator.sh# Enforces conventional commits, blocks force push
+│   ├── save-summary       # AI session summary (wrapper script)
+│   ├── save-summary.py    # AI summary using Claude Agent SDK
+│   └── save-summary-basic.sh # Simple logging without AI
+└── install.sh             # Setup script for new machines
 ```
 
-## What It Does
+## What's Included
 
-### Notifications (`hooks/notify-waiting.sh`)
-When Claude finishes responding or needs your attention, you'll get:
-- **System bell** - terminal beep
-- **iTerm2 dock bounce** - if you're using iTerm2 and it's not focused
-- **macOS notification** - with the "Ping" sound
+### Status Line
+Shows at bottom of Claude Code:
+- Model name (purple)
+- Context usage %
+- Git branch (yellow) with dirty indicator (orange *)
 
-Triggers on:
-- `Stop` - when Claude finishes a response
-- `Notification:idle_prompt` - when Claude has been waiting 60+ seconds
-- `Notification:permission_prompt` - when Claude needs permission to proceed
+### Hooks
+
+| Hook | Event | What it does |
+|------|-------|--------------|
+| **notify-waiting.sh** | Stop, Notification | System bell, iTerm2 dock bounce, macOS notification (Morse sound) |
+| **session-context.sh** | SessionStart | Injects git status + recent 5 commits into context |
+| **commit-validator.sh** | PreToolUse (Bash) | Enforces conventional commits, max 72 chars, blocks `--force` |
+| **save-summary** | SessionEnd | AI-generated session summary saved to `~/.claude/session-logs/` |
+
+### Plugins
+
+Run these after installing:
+```bash
+/plugin marketplace add emdashcodes/claude-code-plugins
+/plugin install google-calendar@emdashcodes-claude-code-plugins
+/google-calendar:setup
+```
 
 ## Installation
 
@@ -42,24 +61,35 @@ mv ~/.claude/settings.json ~/.claude/settings.json.bak
 mv ~/.claude/CLAUDE.md ~/.claude/CLAUDE.md.bak
 
 # Symlink from this repo
-ln -s /path/to/my-claude-tools/settings.json ~/.claude/settings.json
-ln -s /path/to/my-claude-tools/CLAUDE.md ~/.claude/CLAUDE.md
+ln -s ~/code/my-claude-tools/settings.json ~/.claude/settings.json
+ln -s ~/code/my-claude-tools/CLAUDE.md ~/.claude/CLAUDE.md
 ```
+
+## Requirements
+
+- **jq** - JSON processor (all hooks use this)
+- **terminal-notifier** - macOS notifications: `brew install terminal-notifier`
+- **Python 3 + Claude Agent SDK** - For AI session summaries (auto-creates venv)
 
 ## Customization
 
-### Adding More Hooks
-Edit `settings.json` and add to the `hooks` section. Available events:
-- `PreToolUse` / `PostToolUse` - before/after tool calls
-- `Stop` - when Claude finishes responding
-- `Notification` - with matchers: `idle_prompt`, `permission_prompt`
-- `UserPromptSubmit` - when you submit a prompt
-- `SessionStart` / `SessionEnd` - session lifecycle
+### Notification Sound
+Edit `hooks/notify-waiting.sh` and change `-sound Morse` to any of:
+Basso, Blow, Bottle, Frog, Funk, Glass, Hero, Morse, Ping, Pop, Purr, Sosumi, Submarine, Tink
 
-### Disabling Notifications
-Comment out or remove the hooks in `settings.json`, or make the script exit early.
+### Disable a Hook
+Remove or comment out the relevant section in `settings.json`.
 
-## Future Ideas
-- [ ] Push notifications to phone (Telegram/Signal/Pushover)
-- [ ] Different sounds for different events
-- [ ] Slack/Discord webhook notifications
+### Switch to Basic Session Logging
+Change `save-summary` to `save-summary-basic.sh` in settings.json to skip AI summaries.
+
+## Hook Events Reference
+
+| Event | When it fires |
+|-------|---------------|
+| SessionStart | startup, resume, clear, compact |
+| SessionEnd | /exit or session ends |
+| PreToolUse | Before tool execution (can block) |
+| PostToolUse | After tool execution |
+| Stop | When Claude finishes responding |
+| Notification | idle_prompt (60s wait), permission_prompt |

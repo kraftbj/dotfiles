@@ -3,7 +3,43 @@
     "context-a8c@automattic-claude-code-plugins": true
   },
   "model": "sonnet",
+  "statusLine": {
+    "type": "command",
+    "command": "bash $HOME/code/my-claude-tools/statusline.sh"
+  },
   "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/code/my-claude-tools/hooks/session-context.sh"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/code/my-claude-tools/hooks/save-summary"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/code/my-claude-tools/hooks/commit-validator.sh"
+          }
+        ]
+      }
+    ],
     "Notification": [
       {
         "matcher": "idle_prompt",
