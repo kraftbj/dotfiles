@@ -1,0 +1,38 @@
+{
+  "enabledPlugins": {
+    "context-a8c@automattic-claude-code-plugins": true
+  },
+  "model": "sonnet",
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "idle_prompt",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/code/my-claude-tools/hooks/notify-waiting.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "permission_prompt",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/code/my-claude-tools/hooks/notify-waiting.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/code/my-claude-tools/hooks/notify-waiting.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
