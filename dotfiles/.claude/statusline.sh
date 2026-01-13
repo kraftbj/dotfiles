@@ -30,13 +30,11 @@ fi
 
 # Get git branch (if in a git repo)
 git_branch=$(git branch --show-current 2>/dev/null)
-git_dirty=$(git status --porcelain 2>/dev/null)
 
 # Colors
 purple="\033[35m"
 gray="\033[90m"
 yellow="\033[33m"
-orange="\033[38;5;208m"
 reset="\033[0m"
 
 # Build output
@@ -45,7 +43,6 @@ printf " ${gray}·${reset} %d%%" "$context_percent"
 
 if [ -n "$git_branch" ]; then
     printf " ${gray}·${reset} ${yellow}%s${reset}" "$git_branch"
-    [ -n "$git_dirty" ] && printf "${orange}*${reset}"
 fi
 
 printf "\n"

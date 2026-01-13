@@ -4,9 +4,7 @@
 # Editor files
 *.swp
 *~
-
-# Local Claude settings (per-project)
-.claude/
+.idea/
 
 # Python virtual environments
 .venv/

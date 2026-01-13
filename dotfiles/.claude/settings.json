@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$HOME/code/my-claude-tools/hooks/session-context.sh"
+            "command": "$HOME/code/dotfiles/dotfiles/.claude/hooks/session-context.sh"
           }
         ]
       }
@@ -16,7 +16,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$HOME/code/my-claude-tools/hooks/save-summary"
+            "command": "$HOME/code/dotfiles/dotfiles/.claude/hooks/save-summary"
           }
         ]
       }
@@ -27,7 +27,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$HOME/code/my-claude-tools/hooks/commit-validator.sh"
+            "command": "$HOME/code/dotfiles/dotfiles/.claude/hooks/commit-validator.sh"
           }
         ]
       }
@@ -38,7 +38,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$HOME/code/my-claude-tools/hooks/notify-waiting.sh"
+            "command": "$HOME/code/dotfiles/dotfiles/.claude/hooks/notify-waiting.sh"
           }
         ]
       },
@@ -47,7 +47,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$HOME/code/my-claude-tools/hooks/notify-waiting.sh"
+            "command": "$HOME/code/dotfiles/dotfiles/.claude/hooks/notify-waiting.sh"
           }
         ]
       }
@@ -57,7 +57,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$HOME/code/my-claude-tools/hooks/notify-waiting.sh"
+            "command": "$HOME/code/dotfiles/dotfiles/.claude/hooks/notify-waiting.sh"
           }
         ]
       }
@@ -65,9 +65,22 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "bash $HOME/code/my-claude-tools/statusline.sh"
+    "command": "bash $HOME/code/dotfiles/dotfiles/.claude/statusline.sh"
   },
   "enabledPlugins": {
     "context-a8c@automattic-claude-code-plugins": true
+  },
+  "mcpServers": {
+    "chrome-devtools": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["chrome-devtools-mcp@latest"]
+    },
+    "playwright": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"],
+      "disabled": true
+    }
   }
 }
