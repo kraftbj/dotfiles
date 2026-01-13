@@ -7,3 +7,6 @@
 
 # Local Claude settings (per-project)
 .claude/
+
+# Python virtual environments
+.venv/
