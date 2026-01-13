@@ -1,12 +1,4 @@
 {
-  "enabledPlugins": {
-    "context-a8c@automattic-claude-code-plugins": true
-  },
-  "model": "sonnet",
-  "statusLine": {
-    "type": "command",
-    "command": "bash $HOME/code/my-claude-tools/statusline.sh"
-  },
   "hooks": {
     "SessionStart": [
       {
@@ -70,5 +62,12 @@
         ]
       }
     ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash $HOME/code/my-claude-tools/statusline.sh"
+  },
+  "enabledPlugins": {
+    "context-a8c@automattic-claude-code-plugins": true
   }
 }
