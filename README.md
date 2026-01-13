@@ -1,6 +1,6 @@
 # Dotfiles
 
-Personal dotfiles with manifest-driven symlink management. Currently focused on Claude Code configuration.
+Personal dotfiles with manifest-driven symlink management.
 
 License: GPL-2.0-or-later
 
@@ -9,19 +9,19 @@ License: GPL-2.0-or-later
 ```
 .
 ├── dotfiles/                  # Files to be symlinked (mirrors ~)
-│   └── .claude/
-│       ├── settings.json      # → ~/.claude/settings.json
-│       ├── CLAUDE.md          # → ~/.claude/CLAUDE.md
-│       ├── statusline.sh      # Status bar script
-│       └── hooks/             # Hook scripts
-│           ├── notify-waiting.sh
-│           ├── session-context.sh
-│           ├── commit-validator.sh
-│           ├── save-summary
-│           ├── save-summary.py
-│           └── save-summary-basic.sh
+│   ├── .gitconfig             # → ~/.gitconfig
+│   ├── .zshrc                 # → ~/.zshrc
+│   ├── .claude/
+│   │   ├── settings.json      # → ~/.claude/settings.json
+│   │   ├── CLAUDE.md          # → ~/.claude/CLAUDE.md
+│   │   ├── statusline.sh      # Status bar script
+│   │   └── hooks/             # Hook scripts
+│   └── .config/
+│       ├── git/ignore         # → ~/.config/git/ignore
+│       └── zed/settings.json  # → ~/.config/zed/settings.json
 ├── bin/                       # Repo management scripts (NOT symlinked)
-│   └── install.sh             # Manifest-driven installer
+│   ├── install.sh             # Manifest-driven installer
+│   └── add-dotfile.sh         # Add new dotfiles interactively
 ├── manifest.json              # Defines symlinks + exclusions
 ├── README.md
 └── LICENSE
@@ -80,10 +80,22 @@ The installer uses a strict **allowlist-only** approach:
 
 ## What's Included
 
-### Status Line
+### Git
+- **`.gitconfig`** - User identity, GPG signing, Git LFS, `sync-all` alias (prunes merged branches, fast-forwards others)
+- **`.config/git/ignore`** - Global gitignore: `.idea/` (JetBrains), `.claude/settings.local.json` (credentials)
+
+### Shell
+- **`.zshrc`** - Oh-my-zsh with plugins (git, nvm, gh), Spaceship prompt, tool configs (nvm, pnpm, bun), `approvemerge` function for PR workflows
+
+### Editors
+- **`.config/zed/settings.json`** - JetBrains keymap, font sizes, One Dark/Light theme
+
+### Claude Code
+
+#### Status Line
 Shows at bottom of Claude Code: model name, context %, git branch with dirty indicator
 
-### Hooks
+#### Hooks
 
 | Hook | Event | What it does |
 |------|-------|--------------|

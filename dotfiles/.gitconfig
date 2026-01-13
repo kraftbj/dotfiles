@@ -1,0 +1,37 @@
+# This is Git's per-user configuration file.
+[user]
+# Please adapt and uncomment the following lines:
+	name = Brandon Kraft
+	email = public@brandonkraft.com
+	signingkey = BC5988B7C950080D
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[init]
+	defaultBranch = trunk
+[commit]
+	gpgsign = true
+[tag]
+	gphSign = true
+[alias]
+	sync-all = "!f() { \
+		git fetch --prune origin; \
+		gone_branches=$(git branch -vv | grep ': gone]' | awk '{print $1}'); \
+		if [ -n \"$gone_branches\" ]; then \
+			if [ \"$1\" = \"--dry-run\" ] || [ \"$1\" = \"-n\" ]; then \
+				echo \"Would delete these branches:\"; \
+				echo \"$gone_branches\" | sed 's/^/  /'; \
+			else \
+				echo \"$gone_branches\" | xargs git branch -D; \
+			fi; \
+		else \
+			echo \"No branches to prune.\"; \
+		fi; \
+		if [ \"$1\" != \"--dry-run\" ] && [ \"$1\" != \"-n\" ]; then \
+			for branch in $(git branch -vv | grep 'origin/' | grep -v ': gone]' | awk '{print $1}'); do \
+				git fetch origin \"$branch\":\"$branch\" 2>/dev/null && echo \"Fast-forwarded $branch\" || true; \
+			done; \
+		fi; \
+	}; f"

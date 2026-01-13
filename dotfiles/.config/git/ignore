@@ -1,0 +1,5 @@
+# IDE
+.idea/
+
+# Claude local settings (may contain credentials)
+**/.claude/settings.local.json

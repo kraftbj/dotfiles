@@ -11,6 +11,26 @@
       "source": "dotfiles/.claude/CLAUDE.md",
       "target": ".claude/CLAUDE.md",
       "description": "Global Claude instructions"
+    },
+    {
+      "source": "dotfiles/.gitconfig",
+      "target": ".gitconfig",
+      "description": "Git configuration with signing, LFS, and sync-all alias"
+    },
+    {
+      "source": "dotfiles/.config/git/ignore",
+      "target": ".config/git/ignore",
+      "description": "Global gitignore patterns (XDG standard location)"
+    },
+    {
+      "source": "dotfiles/.zshrc",
+      "target": ".zshrc",
+      "description": "Zsh configuration with oh-my-zsh, plugins, and shell functions"
+    },
+    {
+      "source": "dotfiles/.config/zed/settings.json",
+      "target": ".config/zed/settings.json",
+      "description": "Zed editor settings"
     }
   ],
   "exclude": {
@@ -35,7 +55,39 @@
       ".netrc",
       "*.keystore",
       "*.jks",
-      "id_*"
+      "id_*",
+      "*token*",
+      "*_history",
+      ".Trash",
+      ".cache",
+      ".local",
+      ".npm",
+      ".cargo",
+      ".rustup",
+      ".bun",
+      ".nvm",
+      ".gem",
+      ".composer",
+      ".docker",
+      ".cups",
+      ".dropbox",
+      ".DS_Store",
+      ".lesshst",
+      ".viminfo",
+      ".zsh_history",
+      ".zsh_sessions",
+      ".zcompdump*",
+      ".python_history",
+      ".Rhistory",
+      ".RData",
+      "*.zwc",
+      ".mcp-auth",
+      ".npmrc",
+      ".yarnrc",
+      ".config/gh/hosts.yml",
+      ".config/github-copilot/*",
+      ".config/gh-copilot/*",
+      ".config/configstore/*"
     ]
   }
 }
