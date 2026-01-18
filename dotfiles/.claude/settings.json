@@ -68,18 +68,23 @@
     "command": "bash $HOME/code/dotfiles/dotfiles/.claude/statusline.sh"
   },
   "enabledPlugins": {
-    "context-a8c@automattic-claude-code-plugins": true
+    "context-a8c@automattic-claude-code-plugins": true,
+    "triage@automattic-claude-code-plugins": true
   },
   "mcpServers": {
     "chrome-devtools": {
       "type": "stdio",
       "command": "npx",
-      "args": ["chrome-devtools-mcp@latest"]
+      "args": [
+        "chrome-devtools-mcp@latest"
+      ]
     },
     "playwright": {
       "type": "stdio",
       "command": "npx",
-      "args": ["@playwright/mcp@latest"],
+      "args": [
+        "@playwright/mcp@latest"
+      ],
       "disabled": true
     }
   }
