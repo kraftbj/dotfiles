@@ -17,7 +17,7 @@ brew "git-svn"
 brew "go"
 
 # Optional - uncomment if needed
-# brew "bitwarden-cli"
+brew "bitwarden-cli"
 # brew "composer"
 # brew "ffmpeg"
 # brew "imagemagick"
