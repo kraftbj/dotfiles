@@ -428,9 +428,19 @@ execute_install() {
             brew bundle --file="$REPO_DIR/Brewfile"
         else
             echo ""
-            echo -e "${CYAN}Tip: Install Homebrew dependencies with:${NC}"
-            echo "  brew bundle --file=$REPO_DIR/Brewfile"
-            echo -e "${CYAN}Or run this script with --brew${NC}"
+            echo -e "${CYAN}Brewfile found with Homebrew dependencies.${NC}"
+            read -rp "Would you like to run 'brew bundle' now? [y/N]: " install_brew
+            case "$install_brew" in
+                [yY]|[yY][eE][sS])
+                    echo -e "${BLUE}Installing Homebrew dependencies...${NC}"
+                    brew bundle --file="$REPO_DIR/Brewfile"
+                    echo -e "${GREEN}Homebrew dependencies installed.${NC}"
+                    ;;
+                *)
+                    echo -e "${YELLOW}Skipped Homebrew dependencies.${NC}"
+                    echo "  Install later: brew bundle --file=$REPO_DIR/Brewfile"
+                    ;;
+            esac
         fi
     fi
 
