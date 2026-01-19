@@ -5,26 +5,28 @@ brew "zsh-syntax-highlighting"
 brew "spaceship"
 
 # CLI tools
+brew "bitwarden-cli"
 brew "gh"
+brew "gitmoji"
+brew "httpie"
 brew "jq"
 brew "wget"
-brew "httpie"
+
+# System utilities
 brew "coreutils"
 brew "rsync"
 
 # Development
+brew "composer"
 brew "git-svn"
 brew "go"
+brew "php@8.4"
+brew "yarn"
 
-# Optional - uncomment if needed
-brew "bitwarden-cli"
-# brew "composer"
-# brew "ffmpeg"
-# brew "imagemagick"
-# brew "ollama"
-# brew "php@8.4"
-# brew "ruby"
-# brew "yarn"
+# Media
+brew "ffmpeg"
+brew "imagemagick"
 
 # Casks
+cask "claude-code"
 cask "ngrok"
