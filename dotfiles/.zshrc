@@ -69,7 +69,7 @@ export ZSH="$HOME/.oh-my-zsh"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git nvm gh)
+plugins=(git git-auto-fetch nvm gh)
 
 # Let's switch to the right node version when we're in a new dir.
 zstyle ':omz:plugins:nvm' autoload yes
@@ -118,7 +118,7 @@ source "/opt/homebrew/opt/spaceship/spaceship.zsh"
 
 source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
+
 # The following lines have been added by Docker Desktop to enable Docker CLI completions.
 fpath=($HOME/.docker/completions $fpath)
 autoload -Uz compinit
@@ -132,10 +132,15 @@ compinit
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
+alias jt-jetpack="jurassictube -u kraftbj -s kraft -h localhost:80"
+alias jt-jetpack-stop="jurassictube -b -s kraft"
+
 # for the github.a8c.com instance:
 gh() {
-  HTTPS_PROXY="http://127.0.0.1:8118" command gh "$@"
+  HTTPS_PROXY="socks5://127.0.0.1:8080" command gh "$@"
 }
+
+export PATH="$HOME/.local/bin:$PATH"
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 

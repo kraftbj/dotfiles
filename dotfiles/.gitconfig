@@ -11,10 +11,12 @@
 	required = true
 [init]
 	defaultBranch = trunk
+[fetch]
+	prune = true
 [commit]
 	gpgsign = true
 [tag]
-	gphSign = true
+	gpgSign = true
 [alias]
 	sync-all = "!f() { \
 		git fetch --prune origin; \
