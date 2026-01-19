@@ -114,10 +114,10 @@ case ":$PATH:" in
 esac
 # pnpm end
 
-source "/opt/homebrew/opt/spaceship/spaceship.zsh"
-
-source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# Shell enhancements (install via: brew bundle --file=~/code/dotfiles/Brewfile)
+[[ -f "/opt/homebrew/opt/spaceship/spaceship.zsh" ]] && source "/opt/homebrew/opt/spaceship/spaceship.zsh"
+[[ -f "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]] && source "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+[[ -f "/opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]] && source "/opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 # The following lines have been added by Docker Desktop to enable Docker CLI completions.
 fpath=($HOME/.docker/completions $fpath)

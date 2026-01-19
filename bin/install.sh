@@ -417,6 +417,13 @@ execute_install() {
 
     echo ""
     echo -e "${GREEN}${BOLD}Installation complete!${NC}"
+
+    # Remind about Brewfile
+    if [[ -f "$REPO_DIR/Brewfile" ]]; then
+        echo ""
+        echo -e "${CYAN}Tip: Install Homebrew dependencies with:${NC}"
+        echo "  brew bundle --file=$REPO_DIR/Brewfile"
+    fi
     echo ""
     echo "Symlinks created:"
     for entry in "${NEW_SYMLINKS[@]:-}" "${UPDATE_SYMLINKS[@]:-}"; do
