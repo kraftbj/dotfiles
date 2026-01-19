@@ -116,7 +116,8 @@ esac
 
 # Shell enhancements (install via: brew bundle --file=~/code/dotfiles/Brewfile)
 [[ -f "/opt/homebrew/opt/spaceship/spaceship.zsh" ]] && source "/opt/homebrew/opt/spaceship/spaceship.zsh"
-[[ -f "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]] && source "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+# Disabled: conflicts with Kiro CLI autosuggest (causes FUNCNEST recursion)
+# [[ -f "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]] && source "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 [[ -f "/opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]] && source "/opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 # The following lines have been added by Docker Desktop to enable Docker CLI completions.

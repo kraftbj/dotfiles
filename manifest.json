@@ -28,6 +28,11 @@
       "description": "Zsh configuration with oh-my-zsh, plugins, and shell functions"
     },
     {
+      "source": "dotfiles/.zprofile",
+      "target": ".zprofile",
+      "description": "Zsh login shell config with Kiro CLI, Homebrew, and PATH setup"
+    },
+    {
       "source": "dotfiles/.config/zed/settings.json",
       "target": ".config/zed/settings.json",
       "description": "Zed editor settings"

@@ -433,6 +433,27 @@ execute_install() {
             echo -e "${CYAN}Or run this script with --brew${NC}"
         fi
     fi
+
+    # Kiro CLI installation
+    if [[ ! -x "$HOME/.local/bin/kiro-cli" ]]; then
+        echo ""
+        echo -e "${CYAN}Kiro CLI is not installed.${NC}"
+        echo -e "The .zprofile includes Kiro shell integration (provides autosuggestions)."
+        echo ""
+        read -rp "Would you like to install Kiro CLI now? [y/N]: " install_kiro
+        case "$install_kiro" in
+            [yY]|[yY][eE][sS])
+                echo -e "${BLUE}Installing Kiro CLI...${NC}"
+                curl -fsSL https://kiro.dev/install.sh | bash
+                echo -e "${GREEN}Kiro CLI installed.${NC}"
+                ;;
+            *)
+                echo -e "${YELLOW}Skipped Kiro CLI installation.${NC}"
+                echo "  Install later: curl -fsSL https://kiro.dev/install.sh | bash"
+                ;;
+        esac
+    fi
+
     echo ""
     echo "Symlinks created:"
     for entry in "${NEW_SYMLINKS[@]:-}" "${UPDATE_SYMLINKS[@]:-}"; do
