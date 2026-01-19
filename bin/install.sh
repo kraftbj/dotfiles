@@ -454,12 +454,12 @@ execute_install() {
         case "$install_kiro" in
             [yY]|[yY][eE][sS])
                 echo -e "${BLUE}Installing Kiro CLI...${NC}"
-                curl -fsSL https://kiro.dev/install.sh | bash
+                curl -fsSL https://cli.kiro.dev/install | bash
                 echo -e "${GREEN}Kiro CLI installed.${NC}"
                 ;;
             *)
                 echo -e "${YELLOW}Skipped Kiro CLI installation.${NC}"
-                echo "  Install later: curl -fsSL https://kiro.dev/install.sh | bash"
+                echo "  Install later: curl -fsSL https://cli.kiro.dev/install | bash"
                 ;;
         esac
     fi
