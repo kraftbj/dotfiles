@@ -21,6 +21,7 @@ BOLD='\033[1m'
 
 # Options
 FORCE=false
+RUN_BREW=false
 
 # Arrays to track actions
 declare -a NEW_SYMLINKS=()
@@ -36,6 +37,7 @@ usage() {
     echo ""
     echo "Options:"
     echo "  --force    Skip dry-run and install immediately"
+    echo "  --brew     Also run 'brew bundle' to install Homebrew dependencies"
     echo "  --help     Show this help message"
     echo ""
     echo "Default behavior: show what would happen (dry-run), then prompt to proceed."
@@ -418,11 +420,18 @@ execute_install() {
     echo ""
     echo -e "${GREEN}${BOLD}Installation complete!${NC}"
 
-    # Remind about Brewfile
+    # Handle Brewfile
     if [[ -f "$REPO_DIR/Brewfile" ]]; then
-        echo ""
-        echo -e "${CYAN}Tip: Install Homebrew dependencies with:${NC}"
-        echo "  brew bundle --file=$REPO_DIR/Brewfile"
+        if [[ "$RUN_BREW" == true ]]; then
+            echo ""
+            echo -e "${BLUE}Installing Homebrew dependencies...${NC}"
+            brew bundle --file="$REPO_DIR/Brewfile"
+        else
+            echo ""
+            echo -e "${CYAN}Tip: Install Homebrew dependencies with:${NC}"
+            echo "  brew bundle --file=$REPO_DIR/Brewfile"
+            echo -e "${CYAN}Or run this script with --brew${NC}"
+        fi
     fi
     echo ""
     echo "Symlinks created:"
@@ -440,6 +449,10 @@ main() {
         case "$1" in
             --force)
                 FORCE=true
+                shift
+                ;;
+            --brew)
+                RUN_BREW=true
                 shift
                 ;;
             --help|-h)
