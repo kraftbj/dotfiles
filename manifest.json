@@ -36,6 +36,11 @@
       "source": "dotfiles/.config/zed/settings.json",
       "target": ".config/zed/settings.json",
       "description": "Zed editor settings"
+    },
+    {
+      "source": "dotfiles/.claude/style-guide.md",
+      "target": ".claude/style-guide.md",
+      "description": "Personal voice style guide"
     }
   ],
   "exclude": {

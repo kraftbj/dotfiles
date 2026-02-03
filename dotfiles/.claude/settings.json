@@ -69,5 +69,7 @@
   },
   "enabledPlugins": {
     "context-a8c@automattic-claude-code-plugins": true,
-    "triage@automattic-claude-code-plugins": true
-  }}
+    "triage@automattic-claude-code-plugins": true,
+    "agents-md-support@kraftbj-claude-plugins": true
+  }
+}
