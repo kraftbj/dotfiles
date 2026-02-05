@@ -10,7 +10,7 @@ Prefer JetBrains MCP tools (e.g. search_in_files_by_text, get_file_text_by_path,
 
 When opening PRs, always check for a `.github/PULL_REQUEST_TEMPLATE.md` file (or similar) in the repository and fully comply with its format, including all checkboxes, sections, and changelog requirements.
 
-NEVER amend commits or force push without explicit approval. Always create new commits instead. Amended commits and force pushes rewrite history and are disruptive.
+NEVER use `git commit --amend`, `git push --force`, `git push --force-with-lease`, `git rebase`, or `git reset --hard`. Always create new commits instead. If you believe one of these is truly necessary, you MUST stop and ask the user first using AskUserQuestion — do not infer approval from other instructions like "commit this" or "push this". These operations rewrite history and are disruptive.
 
 Never make up GitHub repository URLs, contributor identifiers, or author attributions. Only use real, verified identifiers that exist in the current project or have been explicitly provided by the user.
 
