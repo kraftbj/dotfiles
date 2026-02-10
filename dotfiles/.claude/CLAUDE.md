@@ -17,3 +17,7 @@ Never make up GitHub repository URLs, contributor identifiers, or author attribu
 Never post comments (PR comments, issue comments, etc.) without explicit approval. "Approve this PR" means only approve it, not add a comment. Ask before posting any public comments.
 
 When writing on my behalf (PRs, Linear issues, P2 posts, GitHub comments, documentation, announcements, etc.), follow the style guide in `~/.claude/style-guide.md`.
+
+Never use `@` notation (e.g. `@todo`, `@someone`) in commit messages or in GitHub comments/PR descriptions outside of code blocks. GitHub interprets these as user mentions.
+
+Never use "Fixes ISSUE-123 (partial)" or similar in commits/PRs — Linear will still auto-close the issue. For partial fixes, use "See ISSUE-123" instead. Only use "Fixes" when the issue is fully resolved.
