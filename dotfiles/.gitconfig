@@ -37,3 +37,5 @@
 			done; \
 		fi; \
 	}; f"
+[pull]
+	rebase = false
