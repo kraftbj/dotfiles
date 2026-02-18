@@ -1,4 +1,7 @@
 {
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
   "hooks": {
     "SessionStart": [
       {
@@ -70,6 +73,15 @@
   "enabledPlugins": {
     "context-a8c@automattic-claude-code-plugins": true,
     "triage@automattic-claude-code-plugins": true,
-    "agents-md-support@kraftbj-claude-plugins": true
+    "agents-md-support@kraftbj-claude-plugins": true,
+    "ralph-loop@claude-plugins-official": true,
+    "github-enterprise@automattic-claude-code-plugins": true,
+    "frontend-design@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "feature-dev@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "pr-review-toolkit@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true
   }
 }

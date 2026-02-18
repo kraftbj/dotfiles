@@ -12,6 +12,8 @@ When opening PRs, always check for a `.github/PULL_REQUEST_TEMPLATE.md` file (or
 
 NEVER use `git commit --amend`, `git push --force`, `git push --force-with-lease`, `git rebase`, or `git reset --hard`. Always create new commits instead. If you believe one of these is truly necessary, you MUST stop and ask the user first using AskUserQuestion — do not infer approval from other instructions like "commit this" or "push this". These operations rewrite history and are disruptive.
 
+NEVER use `--no-verify` on regular commits. Only use it for merge conflict resolution commits as specified in project CLAUDE.md files. Always let hooks run on normal commits.
+
 Never make up GitHub repository URLs, contributor identifiers, or author attributions. Only use real, verified identifiers that exist in the current project or have been explicitly provided by the user.
 
 Never post comments (PR comments, issue comments, etc.) without explicit approval. "Approve this PR" means only approve it, not add a comment. Ask before posting any public comments.
@@ -21,3 +23,9 @@ When writing on my behalf (PRs, Linear issues, P2 posts, GitHub comments, docume
 Never use `@` notation (e.g. `@todo`, `@someone`) in commit messages or in GitHub comments/PR descriptions outside of code blocks. GitHub interprets these as user mentions.
 
 Never use "Fixes ISSUE-123 (partial)" or similar in commits/PRs — Linear will still auto-close the issue. For partial fixes, use "See ISSUE-123" instead. Only use "Fixes" when the issue is fully resolved.
+
+Never combine merge conflict resolution with other changes (e.g. changelog updates, new code) in the same commit. Resolve conflicts in one commit, then make additional changes in separate commits.
+
+When creating branches for Linear issues, end the branch name with the issue ID (e.g. `-ARC-1476`). Linear auto-associates branches that end with the issue ID.
+
+For `gh` CLI commands, use `@me` instead of looking up the GitHub username (e.g. `--assignee @me`, `--author @me`).
