@@ -4,9 +4,6 @@
 # Claude local settings (may contain credentials)
 **/.claude/settings.local.json
 
-# Agent OS
-agent-os/
-
 # Compiled source
 *.com
 *.class
