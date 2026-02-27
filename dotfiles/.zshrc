@@ -71,7 +71,9 @@ export ZSH="$HOME/.oh-my-zsh"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git git-auto-fetch nvm gh)
 
-# Let's switch to the right node version when we're in a new dir.
+# Lazy-load nvm (don't source nvm.sh on shell start; load on first use)
+zstyle ':omz:plugins:nvm' lazy yes
+# Auto-switch node version when entering a dir with .nvmrc
 zstyle ':omz:plugins:nvm' autoload yes
 
 source $ZSH/oh-my-zsh.sh
@@ -102,9 +104,8 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+# NVM is loaded via the oh-my-zsh nvm plugin (lazy mode)
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # pnpm
 export PNPM_HOME="$HOME/Library/pnpm"
@@ -120,11 +121,8 @@ esac
 # [[ -f "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]] && source "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 [[ -f "/opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]] && source "/opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
-# The following lines have been added by Docker Desktop to enable Docker CLI completions.
+# Docker CLI completions (fpath only; compinit runs once below)
 fpath=($HOME/.docker/completions $fpath)
-autoload -Uz compinit
-compinit
-# End of Docker CLI completions
 
 # bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
@@ -207,11 +205,13 @@ approvemerge() {
     sleep "$interval"
   done
 }
-# The following lines have been added by Docker Desktop to enable Docker CLI completions.
-fpath=(/Users/kraft/.docker/completions $fpath)
+# Cached compinit: only regenerate completion dump once per day
 autoload -Uz compinit
-compinit
-# End of Docker CLI completions
+if [[ -f "$ZSH_COMPDUMP" && $(date +'%j') == $(stat -f '%Sm' -t '%j' "$ZSH_COMPDUMP" 2>/dev/null) ]]; then
+  compinit -C
+else
+  compinit
+fi
 
 # Added by Antigravity
 export PATH="/Users/kraft/.antigravity/antigravity/bin:$PATH"
