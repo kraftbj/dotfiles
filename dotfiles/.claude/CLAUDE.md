@@ -29,3 +29,7 @@ Never combine merge conflict resolution with other changes (e.g. changelog updat
 When creating branches for Linear issues, end the branch name with the issue ID (e.g. `-ARC-1476`). Linear auto-associates branches that end with the issue ID.
 
 For `gh` CLI commands, use `@me` instead of looking up the GitHub username (e.g. `--assignee @me`, `--author @me`).
+
+NEVER run `pnpm`, `npx`, `npm`, or `node` directly in a Jetpack checkout without explicit permission. Always use `jp` (the Jetpack CLI) which runs commands inside the Docker container. Running package managers directly can destroy the local `node_modules` state.
+
+When I mention "Brad" in a GitHub context, I mean gh user `anomiex`. When I mention "Christopher" in a GitHub context, I mean gh user `ObliviousHarmony`. Unless I give more detail indicating someone else.

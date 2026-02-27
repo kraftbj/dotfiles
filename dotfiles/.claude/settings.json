@@ -77,7 +77,7 @@
     "ralph-loop@claude-plugins-official": true,
     "github-enterprise@automattic-claude-code-plugins": true,
     "frontend-design@claude-plugins-official": true,
-    "code-review@claude-plugins-official": true,
+    "code-review@claude-plugins-official": false,
     "feature-dev@claude-plugins-official": true,
     "code-simplifier@claude-plugins-official": true,
     "superpowers@claude-plugins-official": true,
