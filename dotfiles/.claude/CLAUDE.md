@@ -33,3 +33,4 @@ For `gh` CLI commands, use `@me` instead of looking up the GitHub username (e.g.
 NEVER run `pnpm`, `npx`, `npm`, or `node` directly in a Jetpack checkout without explicit permission. Always use `jp` (the Jetpack CLI) which runs commands inside the Docker container. Running package managers directly can destroy the local `node_modules` state.
 
 When I mention "Brad" in a GitHub context, I mean gh user `anomiex`. When I mention "Christopher" in a GitHub context, I mean gh user `ObliviousHarmony`. Unless I give more detail indicating someone else.
+ When a PR fully covers an issue, use "Fixes" (not "See").
