@@ -39,3 +39,7 @@
 	}; f"
 [pull]
 	rebase = false
+[includeIf "hasconfig:remote.*.url:git@github.a8c.com:*/**"]
+	path = ~/.gitconfig-a8c
+[includeIf "hasconfig:remote.*.url:https://github.a8c.com/**"]
+	path = ~/.gitconfig-a8c

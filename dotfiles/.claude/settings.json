@@ -70,6 +70,11 @@
     "type": "command",
     "command": "bash $HOME/code/dotfiles/dotfiles/.claude/statusline.sh"
   },
+  "permissions": {
+    "allow": [
+      "mcp__plugin_context-a8c_context-a8c:*"
+    ]
+  },
   "enabledPlugins": {
     "context-a8c@automattic-claude-code-plugins": true,
     "triage@automattic-claude-code-plugins": true,

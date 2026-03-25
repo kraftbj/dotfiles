@@ -41,6 +41,11 @@
       "source": "dotfiles/.claude/style-guide.md",
       "target": ".claude/style-guide.md",
       "description": "Personal voice style guide"
+    },
+    {
+      "source": "dotfiles/.gitconfig-a8c",
+      "target": ".gitconfig-a8c",
+      "description": "Special config for a8c GHE repos"
     }
   ],
   "exclude": {
