@@ -46,6 +46,11 @@
       "source": "dotfiles/.gitconfig-a8c",
       "target": ".gitconfig-a8c",
       "description": "Special config for a8c GHE repos"
+    },
+    {
+      "source": "dotfiles/.claude/plugins/claude-hud/config.json",
+      "target": ".claude/plugins/claude-hud/config.json",
+      "description": "Claude HUD statusline display settings"
     }
   ],
   "exclude": {
