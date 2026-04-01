@@ -70,6 +70,8 @@ Preferred transition phrases:
 
 - **Light emoji use in internal contexts.** A `:slightly_smiling_face:` or `:y:` is fine. Don't overdo it.
 
+- **Never use `@something` notation unless intentionally mentioning a person or team.** Many platforms (GitHub, Slack, Linear, P2) interpret `@` as a mention. Refer to annotations, tags, or syntax constructs without the `@` prefix (e.g., "the `since` tag" not "the `@since` tag") or place them in inline code blocks if the `@` is unavoidable.
+
 ### Technical Explanations
 
 - **Provide historical context** when it helps understanding.
