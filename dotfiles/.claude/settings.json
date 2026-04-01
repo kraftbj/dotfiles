@@ -2,6 +2,11 @@
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
+  "permissions": {
+    "allow": [
+      "mcp__plugin_context-a8c_context-a8c:*"
+    ]
+  },
   "hooks": {
     "SessionStart": [
       {
@@ -19,7 +24,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$HOME/code/dotfiles/dotfiles/.claude/hooks/save-summary"
+            "command": "$HOME/code/dotfiles/dotfiles/.claude/hooks/save-summary",
+            "timeout": 120
           }
         ]
       }
@@ -63,17 +69,22 @@
             "command": "$HOME/code/dotfiles/dotfiles/.claude/hooks/notify-waiting.sh"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'f=$HOME/.clawdboard/last-sync; [ -f \"$f\" ] && [ -n \"$(find \"$f\" -mmin -120 2>/dev/null)\" ] && exit 0; if command -v clawdboard >/dev/null 2>&1; then clawdboard hook-sync; else npx -y clawdboard hook-sync; fi'",
+            "timeout": 120,
+            "async": true
+          }
+        ]
       }
     ]
   },
   "statusLine": {
     "type": "command",
-    "command": "bash $HOME/code/dotfiles/dotfiles/.claude/statusline.sh"
-  },
-  "permissions": {
-    "allow": [
-      "mcp__plugin_context-a8c_context-a8c:*"
-    ]
+    "command": "bash -c 'plugin_dir=$(ls -d \"${CLAUDE_CONFIG_DIR:-$HOME/.claude}\"/plugins/cache/claude-hud/claude-hud/*/ 2>/dev/null | awk -F/ '\"'\"'{ print $(NF-1) \"\\t\" $(0) }'\"'\"' | sort -t. -k1,1n -k2,2n -k3,3n -k4,4n | tail -1 | cut -f2-); exec \"/Users/kraft/.bun/bin/bun\" --env-file /dev/null \"${plugin_dir}src/index.ts\"'"
   },
   "enabledPlugins": {
     "context-a8c@automattic-claude-code-plugins": true,
@@ -87,6 +98,35 @@
     "code-simplifier@claude-plugins-official": true,
     "superpowers@claude-plugins-official": true,
     "pr-review-toolkit@claude-plugins-official": true,
-    "claude-md-management@claude-plugins-official": true
+    "claude-md-management@claude-plugins-official": true,
+    "agentic-actions-auditor@trailofbits": true,
+    "product-manager-skills@automattic-claude-code-plugins": true,
+    "sdd@automattic-claude-code-plugins": true,
+    "unit-tests@automattic-claude-code-plugins": true,
+    "a8c-design@automattic-claude-code-plugins": true,
+    "a8c-extras@automattic-claude-code-plugins": true,
+    "presentations@automattic-claude-code-plugins": true,
+    "codex@openai-codex": true,
+    "claude-hud@claude-hud": true
+  },
+  "extraKnownMarketplaces": {
+    "trailofbits": {
+      "source": {
+        "source": "github",
+        "repo": "trailofbits/skills"
+      }
+    },
+    "openai-codex": {
+      "source": {
+        "source": "github",
+        "repo": "openai/codex-plugin-cc"
+      }
+    },
+    "claude-hud": {
+      "source": {
+        "source": "github",
+        "repo": "jarrodwatts/claude-hud"
+      }
+    }
   }
 }
