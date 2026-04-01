@@ -56,6 +56,20 @@ fi
 
 # Validate commit message if found
 if [ -n "$COMMIT_MESSAGE" ]; then
+    # Check for @ notation (GitHub interprets as user mentions).
+    # Strip email addresses first, then check for remaining @word patterns.
+    STRIPPED=$(echo "$COMMIT_MESSAGE" | sed 's/[a-zA-Z0-9._%+-]*@[a-zA-Z0-9.-]*\.[a-zA-Z]*//g')
+    AT_MATCH=$(echo "$STRIPPED" | grep -oE '@[a-zA-Z][a-zA-Z0-9_]*' | head -1)
+    if [ -n "$AT_MATCH" ]; then
+        cat << EOF
+{
+  "decision": "block",
+  "reason": "Commit message contains @ notation ('$AT_MATCH') which GitHub interprets as a user mention. Use the term without the @ prefix (e.g. 'since' instead of '@since')."
+}
+EOF
+        exit 0
+    fi
+
     # Check for valid conventional commit prefix
     ALLOWED_PREFIXES="feat fix docs style refactor test chore perf ci build revert add update remove"
     HAS_VALID_PREFIX=false
