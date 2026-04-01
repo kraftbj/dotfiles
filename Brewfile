@@ -17,6 +17,7 @@ brew "coreutils"
 brew "rsync"
 
 # Development
+brew "bun"
 brew "composer"
 brew "git-svn"
 brew "go"
