@@ -4,7 +4,8 @@
   },
   "permissions": {
     "allow": [
-      "mcp__plugin_context-a8c_context-a8c:*"
+      "mcp__plugin_context-a8c_context-a8c:*",
+      "Read(~/.claude/style-guide.md)"
     ]
   },
   "hooks": {
