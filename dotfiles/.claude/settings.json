@@ -5,7 +5,7 @@
   "permissions": {
     "allow": [
       "mcp__plugin_context-a8c_context-a8c:*",
-      "Read(~/.claude/style-guide.md)"
+      "Read(/Users/kraft/.claude/style-guide.md)"
     ]
   },
   "hooks": {
@@ -108,7 +108,8 @@
     "a8c-extras@automattic-claude-code-plugins": true,
     "presentations@automattic-claude-code-plugins": true,
     "codex@openai-codex": true,
-    "claude-hud@claude-hud": true
+    "claude-hud@claude-hud": true,
+    "jetpack-boost@jetpack-boost-plugins": true
   },
   "extraKnownMarketplaces": {
     "trailofbits": {
@@ -127,6 +128,12 @@
       "source": {
         "source": "github",
         "repo": "jarrodwatts/claude-hud"
+      }
+    },
+    "jetpack-boost-plugins": {
+      "source": {
+        "source": "git",
+        "url": "git@github.a8c.com:Automattic/jetpack-boost-claude-plugins.git"
       }
     }
   }
