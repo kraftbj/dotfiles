@@ -25,7 +25,7 @@ Triggers: user asks to post their captain's log, types `/daily-digest`, etc.
 
 | Arg | Meaning | Default |
 |-----|---------|---------|
-| `YYYY-MM-DD` | Date shown in post title | Today (Austin/US-Central) |
+| `YYYY-MM-DD` | Date shown in post title (overrides the default title-date rule) | See "Title Date" in Window Model |
 | `--since=<ts>` | Window start override | Last published captain's log's timestamp |
 | `--until=<ts>` | Window end override | See "Window Model" |
 | `--dry-run` | Compose + display locally, no MCP writes | off |
@@ -39,6 +39,14 @@ Each post covers `[since, until]` where:
 - **until** = a proposed cutoff based on the time of invocation:
   - If **now < 15:00** local → propose **`today 07:00` local** (morning mode: captures yesterday + gap, excludes anything already done today).
   - If **now >= 15:00** local → propose **`now`** (end-of-day mode: includes today's work).
+
+### Title Date
+
+Separate from the window. The title date signals *what day the post is about*, not the day it was posted.
+
+- **Morning mode** → title date = **yesterday** (today − 1 day). Makes clear the post is about prior work, not today's in-progress work.
+- **End-of-day mode** → title date = **today**.
+- **Explicit `YYYY-MM-DD` arg** → overrides either default.
 
 **ALWAYS confirm the window with the user before gathering.** Display:
 
@@ -73,13 +81,19 @@ Detect "this skill's posts" by tag = `captains-log` OR title prefix `Captain's L
 
 ### Phase 3 — Gather (parallel where possible)
 
-Load providers once:
+**MCP tool names (exact):**
+
+- context-a8c: `mcp__plugin_context-a8c_context-a8c__context-a8c-load-provider` and `mcp__plugin_context-a8c_context-a8c__context-a8c-execute-tool`
+- Linear: `mcp__linear__list_issues`, `mcp__linear__get_issue`, `mcp__linear__list_comments`, etc. — **Linear is a separate MCP, not a context-a8c provider.**
+- WP.com (for reading/writing kraftcaptainslog and fossep2 posts directly): `mcp__claude_ai_WordPress_com__wpcom-mcp-content-authoring`
+
+**Available context-a8c providers:** `slack`, `wpcom`, `github`, `github-a8c` (internal GHE), `mgs`, `matticspace`, `teamcity`, `jetpack`, `fieldguide`, `opengrok`, `team-activity`, `datadog`, `anonymattic`. No `linear` provider.
+
+Load what you need at the start of the phase:
 
 ```
-mcp__context-a8c__context-a8c-load-provider(provider: "linear")
-mcp__context-a8c__context-a8c-load-provider(provider: "slack")
-mcp__context-a8c__context-a8c-load-provider(provider: "wpcom")
-mcp__context-a8c__context-a8c-load-provider(provider: "github")
+mcp__plugin_context-a8c_context-a8c__context-a8c-load-provider(provider: "slack")
+mcp__plugin_context-a8c_context-a8c__context-a8c-load-provider(provider: "wpcom")
 ```
 
 Then gather, in parallel where independent:
@@ -98,40 +112,47 @@ Group by repo. Record commit subject lines.
 
 **B. GitHub PRs — github.com**
 
-Use `gh` CLI (user's global CLAUDE.md notes `webfetch` doesn't work for github.com):
+Use `gh` CLI. Use the `YYYY-MM-DD..YYYY-MM-DD` range syntax on `--created` / `--updated` (do NOT pass two separate `--created` flags — the second silently overrides the first):
 
 ```bash
-gh search prs --author=@me --created=">=$SINCE_DATE" --state=all --limit=50 \
+gh search prs --author=@me --created="$SINCE_DATE..$UNTIL_DATE" --state=all --limit=50 \
   --json=url,title,state,repository,createdAt,closedAt,mergedAt
-gh search prs --reviewed-by=@me --updated=">=$SINCE_DATE" --limit=30 \
+gh search prs --reviewed-by=@me --updated="$SINCE_DATE..$UNTIL_DATE" --limit=30 \
   --json=url,title,state,repository,updatedAt
 ```
 
-Filter results whose timestamps fall within `[since, until]`.
-
 **C. GitHub PRs — github.a8c.com (internal GHE)**
 
-Prefer `gh` CLI if it's authenticated for the GHE host (run `gh auth status` to check). Otherwise use the context-a8c github provider:
+`gh` on this machine is typically auth'd for both hosts — confirm with `gh auth status`. To target the GHE host, set **`GH_HOST`** env var on the command (there is NO `--hostname` flag):
 
-```
-mcp__context-a8c__context-a8c-execute-tool(provider: "github", tool: "<list available tools and pick the my-activity / my-prs equivalent>", params: { since: "$SINCE", until: "$UNTIL" })
-```
-
-If the exact tool name isn't known, `load-provider` returns the provider's tool list — inspect and pick.
-
-**D. Linear**
-
-```
-mcp__context-a8c__context-a8c-execute-tool(provider: "linear", tool: "my-issues", params: {})
-mcp__context-a8c__context-a8c-execute-tool(provider: "linear", tool: "inbox", params: {})
+```bash
+GH_HOST=github.a8c.com gh search prs --author=@me --created="$SINCE_DATE..$UNTIL_DATE" --limit=30 \
+  --json=url,title,state,repository,createdAt
+GH_HOST=github.a8c.com gh search prs --reviewed-by=@me --updated="$SINCE_DATE..$UNTIL_DATE" --limit=20 \
+  --json=url,title,state,repository,updatedAt
 ```
 
-Filter to issues with updates in `[since, until]`.
+Fallback (if `gh` isn't auth'd for GHE): load the context-a8c `github-a8c` provider and run `load-provider` to inspect available tools.
+
+**D. Linear (standalone MCP)**
+
+```
+mcp__linear__list_issues(assignee: "me", updatedAt: "<ISO-8601 duration, e.g. -P7D>", limit: 50)
+```
+
+`updatedAt` accepts an ISO-8601 duration (e.g. `-P7D` = last 7 days). If the skill's window isn't a round number of days, pass the wider duration and then filter the results by comparing each issue's `updatedAt` to `[since, until]` locally.
+
+For deeper context on any specific issue:
+
+```
+mcp__linear__get_issue(id: "<ISSUE-ID>")
+mcp__linear__list_comments(issueId: "<ISSUE-ID>")
+```
 
 **E. Slack**
 
 ```
-mcp__context-a8c__context-a8c-execute-tool(provider: "slack", tool: "search", params: { query: "from:@kraft after:$SINCE_DATE before:$UNTIL_DATE" })
+mcp__plugin_context-a8c_context-a8c__context-a8c-execute-tool(provider: "slack", tool: "search", params: { query: "from:@kraft after:$SINCE_DATE before:$UNTIL_DATE" })
 ```
 
 Also pull recent messages from priority channels in `~/.claude/context-a8c.json` (`slack.channels`). **For DMs**, keep only metadata ("replied to 3 DM threads") — do not include message contents.
@@ -141,14 +162,34 @@ Also pull recent messages from priority channels in `~/.claude/context-a8c.json`
 For each priority P2 in `~/.claude/context-a8c.json` (`p2s.priority`):
 
 ```
-mcp__context-a8c__context-a8c-execute-tool(provider: "wpcom", tool: "posts-search", params: { wpcom_site: "<site>", author: "kraftbj", after: "$SINCE", before: "$UNTIL" })
+mcp__plugin_context-a8c_context-a8c__context-a8c-execute-tool(provider: "wpcom", tool: "posts-search", params: { wpcom_site: "<site>", author: "kraftbj", after: "$SINCE", before: "$UNTIL" })
 ```
 
 Also:
 
 ```
-mcp__context-a8c__context-a8c-execute-tool(provider: "wpcom", tool: "user-notifications-inbox", params: {})
+mcp__plugin_context-a8c_context-a8c__context-a8c-execute-tool(provider: "wpcom", tool: "user-notifications-inbox", params: {})
 ```
+
+**G. Team activity (optional, often adds context)**
+
+The context-a8c `team-activity` provider aggregates cross-source activity signals. Load it and inspect its tools — it may surface work that didn't land in git/Linear/Slack directly (e.g., reviews, mentions, comment-level engagement):
+
+```
+mcp__plugin_context-a8c_context-a8c__context-a8c-load-provider(provider: "team-activity")
+```
+
+Then call the provider's tools with window bounds. If the result largely overlaps with what B/C/D/E/F already gave us, skip the overlap in the compose rather than duplicating.
+
+**H. Matts Global Search (opportunistic)**
+
+When an item needs more context (a P2 post teaser that's worth expanding, a codename that needs disambiguation), `mgs` gives Elasticsearch-backed search across internal content:
+
+```
+mcp__plugin_context-a8c_context-a8c__context-a8c-load-provider(provider: "mgs")
+```
+
+Don't use it as a primary source — just as a lookup when something's unclear.
 
 ### Phase 4 — Light Scrub
 
@@ -164,7 +205,7 @@ Everything else stays as-is, including: Linear issue IDs and titles, teammate @-
 
 **kraftcaptainslog post:**
 
-- Title: `Captain's Log, Stardate YYYY-MM-DD`
+- Title: `Captain's Log, Stardate YYYY-MM-DD` — use the **title date** per the Window Model (yesterday for morning mode, today for end-of-day mode, or the explicit `YYYY-MM-DD` arg if provided).
 - 2–3 sentence lede summarizing the shape of the window.
 - Sections (only include if non-empty): **Code**, **Writing**, **Conversations**, **Reading**, **Misc**. Use sensible judgment; skip sections that would feel like filler.
 - Bullets, short. Link every mentioned artifact: Linear issues, PRs (both hosts), P2 posts, Slack threads.
