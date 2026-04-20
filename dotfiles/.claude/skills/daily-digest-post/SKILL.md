@@ -213,8 +213,8 @@ Don't use it as a primary source — just as a lookup when something's unclear.
 Apply only these scrubs to gathered data:
 
 - **Slack DM contents** — omit. Summarize as metadata only ("replied to a DM thread with <teammate> about <topic>" at high level is OK, but no verbatim quotes).
-- **Customer-identifying info** — abstract. Customer names, company names, email addresses, support ticket IDs, billing IDs → use "a customer" / "a store owner" / "an internal report" / etc.
-- **Credentials** — if anything that looks like a key, token, or password slipped into commit messages / Linear titles / Slack text, remove it entirely.
+- **Customer-identifying info** — abstract. Customer names, company names, email addresses, billing IDs → use "a customer" / "a store owner" / "an internal report" / etc. (Support ticket IDs are fine to keep — both destinations are internal.)
+- **Credentials** — if anything that looks like a key, token, or password slipped into commit messages / Linear titles / Slack text, STOP and flag it to the user: show the suspect item in context and ask whether it's actually a credential, whether upstream cleanup is needed (e.g. commit history rewrite, key rotation), and only then continue. Do not silently scrub and publish — the fact that it surfaced may indicate a leak that needs follow-up outside this skill.
 
 Everything else stays as-is, including: Linear issue IDs and titles, teammate @-mentions, codenames, internal repo paths, github.a8c.com PR URLs, internal P2 post URLs.
 
