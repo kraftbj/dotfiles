@@ -48,6 +48,8 @@ Separate from the window. The title date signals *what day the post is about*, n
 - **End-of-day mode** → title date = **today**.
 - **Explicit `YYYY-MM-DD` arg** → overrides either default.
 
+**Title / window conflict handling.** If the user passes a title-arg that contradicts the window (e.g. arg `today` while morning-mode window excludes today), DO NOT silently keep the override. Resurface the specific mismatch before gathering: *"Window excludes today's work. Options: title = `YYYY-MM-DD` [yesterday], title = `YYYY-MM-DD` [today] + switch window to end-of-day, or keep the override as-is."* Treat a bare "proceed" as "accept the defaults", not "keep the conflicting arg".
+
 **ALWAYS confirm the window with the user before gathering.** Display:
 
 ```
@@ -114,11 +116,25 @@ Group by repo. Record commit subject lines.
 
 Use `gh` CLI. Use the `YYYY-MM-DD..YYYY-MM-DD` range syntax on `--created` / `--updated` (do NOT pass two separate `--created` flags — the second silently overrides the first):
 
+Notes on `gh search prs` flags:
+
+- `--state` only accepts `open` or `closed` (there is no `all` value — omit the flag for both).
+- JSON fields `createdAt`, `closedAt` exist; `mergedAt` does **not** (use `closedAt` + `state=="merged"`).
+
 ```bash
-gh search prs --author=@me --created="$SINCE_DATE..$UNTIL_DATE" --state=all --limit=50 \
-  --json=url,title,state,repository,createdAt,closedAt,mergedAt
+gh search prs --author=@me --created="$SINCE_DATE..$UNTIL_DATE" --limit=50 \
+  --json=url,title,state,repository,createdAt,closedAt
 gh search prs --reviewed-by=@me --updated="$SINCE_DATE..$UNTIL_DATE" --limit=30 \
   --json=url,title,state,repository,updatedAt
+```
+
+**Also gather merged-by-me PRs** (catches Dependabot / bot-authored PRs that the user merged without formal review — `gh search prs` has no `--merged-by` flag, so iterate per repo):
+
+```bash
+# For each repo with activity in the window (discover via git commits / author search first):
+gh pr list --repo OWNER/REPO --state merged --search "merged:$SINCE_DATE..$UNTIL_DATE" --limit 50 \
+  --json number,title,author,mergedBy,mergedAt,url
+# Keep results where mergedBy.login == the user's GH login and author != the user (dedup — already in author search).
 ```
 
 **C. GitHub PRs — github.a8c.com (internal GHE)**
@@ -130,6 +146,7 @@ GH_HOST=github.a8c.com gh search prs --author=@me --created="$SINCE_DATE..$UNTIL
   --json=url,title,state,repository,createdAt
 GH_HOST=github.a8c.com gh search prs --reviewed-by=@me --updated="$SINCE_DATE..$UNTIL_DATE" --limit=20 \
   --json=url,title,state,repository,updatedAt
+# Same per-repo merged-by-me sweep for internal repos with activity in the window.
 ```
 
 Fallback (if `gh` isn't auth'd for GHE): load the context-a8c `github-a8c` provider and run `load-provider` to inspect available tools.
@@ -203,6 +220,8 @@ Everything else stays as-is, including: Linear issue IDs and titles, teammate @-
 
 ### Phase 5 — Compose
 
+**Merged-to-trunk vs. in-flight.** Across all posts, do not conflate work that has landed with work that is only on a PR branch. If a section draws heavily from an open PR, name the PR in the section header (e.g. "Bundled backends (PR #11, open)") and add a one-line note that nothing in the section has landed on trunk. Don't phrase open-PR work as if it already shipped (e.g. *avoid* "went from empty repo to a working plugin with X" when X is in an open PR).
+
 **kraftcaptainslog post:**
 
 - Title: `Captain's Log, Stardate YYYY-MM-DD` — use the **title date** per the Window Model (yesterday for morning mode, today for end-of-day mode, or the explicit `YYYY-MM-DD` arg if provided).
@@ -211,11 +230,16 @@ Everything else stays as-is, including: Linear issue IDs and titles, teammate @-
 - Bullets, short. Link every mentioned artifact: Linear issues, PRs (both hosts), P2 posts, Slack threads.
 - Tag: `captains-log`. Category: `Log`.
 
-**fossep2 cross-post (optional, DRAFT only):**
+**Project-P2 cross-post drafts (optional, DRAFT only):**
 
-- Title: match existing fossep2 convention — fetch the 3 most recent fossep2 posts first and mirror their title format. Fallback: `YYYY-MM-DD · FOSSE log`.
-- Scope: only FOSSE-related items. If no FOSSE work in the window, don't create the draft — tell the user.
-- Tags: match existing fossep2 conventions (look at recent posts).
+Applies to any project P2 (currently only `fossep2.wordpress.com`, but the same rules apply if more are added).
+
+- **It's Kraft's personal daily digest, sliced to the project's scope** — not a team-wide recap or a formal project report. A team-wide weekly would be a separate skill.
+- Title: `Kraft's Daily Digest — YYYY-MM-DD (<project> slice)` (date = title date from the Window Model). Do NOT use "Week N" or team-weekly framing.
+- Lede: one sentence making the personal-log scope explicit, with a link back to the parent kraftcaptainslog post.
+- Body: project-scoped subset of Kraft's work only. Structure as **Merged to trunk** / **In flight — not yet merged** / **Writing** / **Conversations** / **Reading**. Skip "What's next" and other forward-planning — that's the team's job, not a personal log's.
+- Tags: match existing P2 conventions (look at recent posts) + `dailylog` (personal daily-log tag — create it on the target P2 if it doesn't exist yet).
+- If no project-scoped work in the window, don't create the draft — tell the user.
 
 ### Phase 6 — Present for Review
 
@@ -269,10 +293,15 @@ Before writing:
 - Calling MCP `posts-search` without date-range params, then including posts from outside the window.
 - Forgetting the `until` cutoff applies to local git and `gh` data too — not just MCP data.
 - Composing the fossep2 draft from items unrelated to FOSSE.
+- Framing a project-P2 draft (fossep2, etc.) as a team weekly ("Week N: …") or formal project report instead of Kraft's personal daily digest sliced to the project's scope.
+- Conflating merged-to-trunk work with in-flight PR work — especially when summarizing a PR's branch commits as if they already landed.
+- Missing merged-by-me / Dependabot PRs because only `--author=@me` + `--reviewed-by=@me` searches ran.
+- Keeping an explicit `today` title arg when the window is morning-mode (excludes today's work) — surface the conflict and ask.
 - Calling `wpcom-mcp-content-authoring` with `status: "publish"` on fossep2 (ALWAYS draft).
 - Double-publishing because the idempotency check didn't run first.
 - Applying natural-language window adjustments without echoing the parsed value back.
 - Including verbatim Slack DM text (even internally, DMs are personal — metadata only).
+- Using `gh search prs --state=all` (invalid — omit the flag) or requesting JSON field `mergedAt` (doesn't exist on `gh search prs`; use `closedAt` + `state=="merged"`).
 
 ## Configuration Notes
 
