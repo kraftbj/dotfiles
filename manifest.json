@@ -51,6 +51,16 @@
       "source": "dotfiles/.claude/plugins/claude-hud/config.json",
       "target": ".claude/plugins/claude-hud/config.json",
       "description": "Claude HUD statusline display settings"
+    },
+    {
+      "source": "dotfiles/.claude/skills/daily-digest-post/SKILL.md",
+      "target": ".claude/skills/daily-digest-post/SKILL.md",
+      "description": "Captain's Log skill — publishes daily summary to kraftcaptainslog, optional fossep2 draft"
+    },
+    {
+      "source": "dotfiles/.claude/commands/daily-digest.md",
+      "target": ".claude/commands/daily-digest.md",
+      "description": "/daily-digest slash command — invokes the daily-digest-post skill"
     }
   ],
   "exclude": {
