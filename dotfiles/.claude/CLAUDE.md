@@ -18,11 +18,13 @@ Never make up GitHub repository URLs, contributor identifiers, or author attribu
 
 Never post comments (PR comments, issue comments, etc.) without explicit approval. "Approve this PR" means only approve it, not add a comment. Ask before posting any public comments.
 
+When I say "resolve the conversation" (or "resolve the comment/thread") on a GitHub PR, I mean collapse the whole review thread via the GraphQL `resolveReviewThread` mutation — not marking an individual comment as resolved, and not just replying. The flow: (1) fetch the thread ID with a GraphQL query on `repository.pullRequest.reviewThreads.nodes.id`; (2) post the reply via `gh api -X POST repos/OWNER/REPO/pulls/N/comments/COMMENT_ID/replies -f body=...`; (3) resolve with `gh api graphql -f query='mutation { resolveReviewThread(input: {threadId: "PRRT_..."}) { thread { isResolved } } }'`. The REST API has no endpoint for this — it's GraphQL-only.
+
 When writing on my behalf (PRs, Linear issues, P2 posts, GitHub comments, documentation, announcements, etc.), follow the style guide in `~/.claude/style-guide.md`.
 
-Never use `@` notation (e.g. `@todo`, `@someone`) in commit messages or in GitHub comments/PR descriptions outside of code blocks. GitHub interprets these as user mentions.
+Never use `@` notation (e.g. `@todo`, `@someone`, `@since`, `@return`, `@param`) in commit messages or in GitHub issues/PRs/comments outside of code blocks. GitHub interprets these as user mentions.
 
-Never use "Fixes ISSUE-123 (partial)" or similar in commits/PRs — Linear will still auto-close the issue. For partial fixes, use "See ISSUE-123" instead. Only use "Fixes" when the issue is fully resolved.
+Use "Fixes #123" when the code change completely addresses the issue. Use "See #123" only when more code changes are still needed. Don't downgrade to "See" just because the PR hasn't been tested yet — that's what PR review is for. Never use "Fixes ISSUE-123 (partial)" or similar — Linear/GitHub will still auto-close the issue.
 
 Never combine merge conflict resolution with other changes (e.g. changelog updates, new code) in the same commit. Resolve conflicts in one commit, then make additional changes in separate commits.
 
@@ -34,4 +36,4 @@ NEVER run `pnpm`, `npx`, `npm`, or `node` directly in a Jetpack checkout without
 
 When I mention "Brad" in a GitHub context, I mean gh user `anomiex`. When I mention "Christopher" in a GitHub context, I mean gh user `ObliviousHarmony`. When I mention "Thomas" in a GitHub context, I mean gh user `tbradsha` (Thomas Bradshaw — never call him Tim). Unless I give more detail indicating someone else.
 
-When a PR fully covers an issue, use "Fixes" (not "See").
+Do not use the `superpowers:using-git-worktrees` skill. Use native EnterWorktree/ExitWorktree tools or Agent `isolation: "worktree"` instead.
