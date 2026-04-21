@@ -128,6 +128,8 @@ gh search prs --reviewed-by=@me --updated="$SINCE_DATE..$UNTIL_DATE" --limit=30 
   --json=url,title,state,repository,updatedAt
 ```
 
+**On the `--reviewed-by=@me --updated=...` query.** This returns PRs you have ever reviewed that were updated in the window — including PRs where someone else (not you) made the recent update. That's overly broad but it's the closest single-query approximation `gh search` offers. Compose-time judgment: if a PR appears in the reviewed set AND your last review timestamp is outside the window, downgrade or omit. For most days the noise is small (a handful of PRs); err toward including rather than excluding, because under-surfacing reviews is the more common failure mode.
+
 **Also gather merged-by-me PRs** (catches Dependabot / bot-authored PRs that the user merged without formal review — `gh search prs` has no `--merged-by` flag, so iterate per repo):
 
 ```bash
@@ -227,6 +229,7 @@ Everything else stays as-is, including: Linear issue IDs and titles, teammate @-
 - Title: `Captain's Log, Stardate YYYY-MM-DD` — use the **title date** per the Window Model (yesterday for morning mode, today for end-of-day mode, or the explicit `YYYY-MM-DD` arg if provided).
 - 2–3 sentence lede summarizing the shape of the window.
 - Sections (only include if non-empty): **Code**, **Writing**, **Conversations**, **Reading**, **Misc**. Use sensible judgment; skip sections that would feel like filler.
+- **Reviews are work too.** If the gather surfaces 3+ PRs you reviewed but did not author, add a dedicated **Reviews** sub-bullet (or its own section if volume warrants) under Code listing them grouped by repo, with counts. Don't bury review activity inside per-repo authored-work bullets — review work is independent and frequently the largest chunk of a day. Examples: "*Reviewed 6 jetpack PRs (2 approved, 4 with comments). Notable: [#48096] (blog_id injection), [#47723] (CI change-detection).*" Worse pattern: writing a Jetpack code paragraph that mentions one PR you commented on and silently dropping the other five.
 - Bullets, short. Link every mentioned artifact: Linear issues, PRs (both hosts), P2 posts, Slack threads.
 - Tag: `captains-log`. Category: `Log`.
 
@@ -300,6 +303,7 @@ Before writing:
 - Framing a project-P2 draft (fossep2, etc.) as a team weekly ("Week N: …") or formal project report instead of Kraft's personal daily digest sliced to the project's scope.
 - Conflating merged-to-trunk work with in-flight PR work — especially when summarizing a PR's branch commits as if they already landed.
 - Missing merged-by-me / Dependabot PRs because only `--author=@me` + `--reviewed-by=@me` searches ran.
+- **Under-surfacing PR review work.** Reviews are independent work; if you reviewed 6 jetpack PRs and 4 woocommerce PRs in the window, the captain's log should say so plainly — not bury one or two of them inside an "iterated on X" paragraph. Use a Reviews sub-bullet under Code (or its own section when volume warrants) with grouped counts.
 - Keeping an explicit `today` title arg when the window is morning-mode (excludes today's work) — surface the conflict and ask.
 - Calling `wpcom-mcp-content-authoring` with `status: "publish"` on fossep2 (ALWAYS draft).
 - Double-publishing because the idempotency check didn't run first.
