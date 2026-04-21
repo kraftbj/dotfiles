@@ -238,7 +238,7 @@ Applies to any project P2 (currently only `fossep2.wordpress.com`, but the same 
 - Title: `Kraft's Daily Digest — YYYY-MM-DD (<project> slice)` (date = title date from the Window Model). Do NOT use "Week N" or team-weekly framing.
 - Lede: one sentence making the personal-log scope explicit, with a link back to the parent kraftcaptainslog post.
 - Body: project-scoped subset of Kraft's work only. Structure as **Merged to trunk** / **In flight — not yet merged** / **Writing** / **Conversations** / **Reading**. Skip "What's next" and other forward-planning — that's the team's job, not a personal log's.
-- Tags: match existing P2 conventions (look at recent posts) + `dailylog` (personal daily-log tag — create it on the target P2 if it doesn't exist yet).
+- Tags: match existing P2 conventions (look at recent posts) + `dailylog` (personal daily-log tag — see the cross-cutting rule in Phase 7 / Publishing Rules; create it on the target P2 if it doesn't exist yet).
 - If no project-scoped work in the window, don't create the draft — tell the user.
 
 ### Phase 6 — Present for Review
@@ -254,12 +254,15 @@ Only proceed to Phase 7 after the user confirms. In `--dry-run` mode, STOP here.
 
 ### Phase 7 — Write to WP.com
 
-Use `mcp__claude_ai_WordPress_com__wpcom-mcp-content-authoring`.
+Use `mcp__claude_ai_WordPress_com__wpcom-mcp-content-authoring` (or context-a8c's `wpcom` provider's `content-authoring` tool — they're equivalent; pick whichever has a live session).
 
-- **kraftcaptainslog:** publish (`status: "publish"`). Tag `captains-log`, category `Log`.
-- **fossep2:** DRAFT (`status: "draft"`). Match fossep2's tagging conventions.
+**Cross-cutting tag rule.** Every post this skill creates **except the kraftcaptainslog post** gets the `dailylog` tag (in addition to any per-destination tags below). Captainslog uses `captains-log` as its primary skill-detection tag and does NOT get `dailylog`. If `dailylog` doesn't exist yet on a target site, create it.
 
-Report back the published URL (for kraftcaptainslog) and the edit/preview links (for fossep2).
+- **kraftcaptainslog:** publish (`status: "publish"`). Tag `captains-log`, category `Log`. Do NOT add `dailylog` here.
+- **fossep2:** DRAFT (`status: "draft"`). Tags: `dailylog` + any matching existing fossep2 conventions.
+- **Any future cross-post target:** DRAFT (`status: "draft"`). Tags: `dailylog` + per-target conventions.
+
+Report back the published URL (for kraftcaptainslog) and the edit/preview links (for any drafts).
 
 ### Phase 8 — Log
 
@@ -273,9 +276,10 @@ Local audit trail, independent of the WP.com API.
 
 ## Publishing Rules
 
-- kraftcaptainslog: `status: "publish"`, tag `captains-log`, category `Log`, author = kraftbj.
-- fossep2: `status: "draft"`, tags matching existing fossep2 conventions.
-- Never publish to fossep2 directly, regardless of user instruction — if the user insists, they can publish from the WP.com UI after review.
+- kraftcaptainslog: `status: "publish"`, tag `captains-log`, category `Log`, author = kraftbj. NO `dailylog` tag here.
+- fossep2 (and any other cross-post target): `status: "draft"`, tag `dailylog` + matching existing per-target conventions, author = kraftbj.
+- **`dailylog` tag is required on every non-captainslog post** so all cross-posts are queryable as a single set across project P2s. Create the tag on the target site if it doesn't exist yet.
+- Never publish to fossep2 (or any cross-post target) directly, regardless of user instruction — if the user insists, they can publish from the WP.com UI after review.
 - No images in v1.
 - No scheduling in v1.
 
