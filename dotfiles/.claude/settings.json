@@ -18,6 +18,14 @@
             "command": "$HOME/code/dotfiles/dotfiles/.claude/hooks/session-context.sh"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/kraft/.nvm/versions/node/v22.19.0/lib/node_modules/cavemem/dist/index.js hook run session-start --ide claude-code"
+          }
+        ]
       }
     ],
     "SessionEnd": [
@@ -27,6 +35,14 @@
             "type": "command",
             "command": "$HOME/code/dotfiles/dotfiles/.claude/hooks/save-summary",
             "timeout": 120
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/kraft/.nvm/versions/node/v22.19.0/lib/node_modules/cavemem/dist/index.js hook run session-end --ide claude-code"
           }
         ]
       }
@@ -68,6 +84,12 @@
           {
             "type": "command",
             "command": "$HOME/code/dotfiles/dotfiles/.claude/hooks/notify-waiting.sh"
+          },
+          {
+            "type": "command",
+            "command": "bash -c 'f=$HOME/.clawdboard/last-sync; [ -f \"$f\" ] && [ -n \"$(find \"$f\" -mmin -120 2>/dev/null)\" ] && exit 0; if command -v clawdboard >/dev/null 2>&1; then clawdboard hook-sync; else npx -y clawdboard hook-sync; fi'",
+            "timeout": 120,
+            "async": true
           }
         ]
       },
@@ -75,9 +97,27 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'f=$HOME/.clawdboard/last-sync; [ -f \"$f\" ] && [ -n \"$(find \"$f\" -mmin -120 2>/dev/null)\" ] && exit 0; if command -v clawdboard >/dev/null 2>&1; then clawdboard hook-sync; else npx -y clawdboard hook-sync; fi'",
-            "timeout": 120,
-            "async": true
+            "command": "/Users/kraft/.nvm/versions/node/v22.19.0/lib/node_modules/cavemem/dist/index.js hook run stop --ide claude-code"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/kraft/.nvm/versions/node/v22.19.0/lib/node_modules/cavemem/dist/index.js hook run user-prompt-submit --ide claude-code"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/kraft/.nvm/versions/node/v22.19.0/lib/node_modules/cavemem/dist/index.js hook run post-tool-use --ide claude-code"
           }
         ]
       }
@@ -109,7 +149,9 @@
     "presentations@automattic-claude-code-plugins": true,
     "codex@openai-codex": true,
     "claude-hud@claude-hud": true,
-    "jetpack-boost@jetpack-boost-plugins": true
+    "jetpack-boost@jetpack-boost-plugins": true,
+    "caveman@caveman": true,
+    "ck@cavekit-marketplace": true
   },
   "extraKnownMarketplaces": {
     "trailofbits": {
@@ -135,6 +177,26 @@
         "source": "git",
         "url": "git@github.a8c.com:Automattic/jetpack-boost-claude-plugins.git"
       }
+    },
+    "caveman": {
+      "source": {
+        "source": "github",
+        "repo": "JuliusBrussee/caveman"
+      }
+    },
+    "cavekit-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "juliusbrussee/cavekit"
+      }
+    }
+  },
+  "mcpServers": {
+    "cavemem": {
+      "command": "/Users/kraft/.nvm/versions/node/v22.19.0/lib/node_modules/cavemem/dist/index.js",
+      "args": [
+        "mcp"
+      ]
     }
   }
 }
