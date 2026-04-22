@@ -7,7 +7,9 @@
 # Features:
 # - Validates conventional commit prefixes
 # - Enforces max length (75 chars)
-# - Blocks force commits (-f flag)
+# - Blocks force commits (-f, --force, --force-with-lease) as standalone args
+#   (substrings like "upstream-first" or a "-form" in a branch name are fine;
+#   --no-verify is intentionally allowed for merge-conflict commits)
 
 # Read JSON input from stdin
 JSON_DATA=$(cat)
@@ -28,12 +30,16 @@ if ! echo "$COMMAND" | grep -q "git commit"; then
     exit 0
 fi
 
-# Block force commits (-f flag)
-if echo "$COMMAND" | grep -qE -- "git commit.*-f"; then
+# Block force commits. Match the flag only when it's a standalone argument
+# (preceded by whitespace or line-start, followed by whitespace, '=', or
+# line-end) so substrings like "short-form" in a commit subject or "-form" in
+# a branch name don't trigger a false positive. --no-verify is deliberately
+# NOT blocked here — it's the expected tool for merge-conflict commits.
+if echo "$COMMAND" | grep -qE -- "(^|[[:space:]])(-f|--force|--force-with-lease)([[:space:]]|=|$)"; then
     cat << EOF
 {
   "decision": "block",
-  "reason": "Force commits (-f) are not allowed! If you really need this, ask your human."
+  "reason": "Force commit/push flag detected (-f / --force / --force-with-lease). Not allowed without explicit human approval — ask first."
 }
 EOF
     exit 0
