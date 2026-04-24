@@ -1,0 +1,39 @@
+Never add AI credit (commits, PRs, code comments, etc.).
+
+github.com does not accept webfetch; use the gh CLI instead.
+
+wordpress.org URLs (including core.trac.wordpress.org) reject generic user-agents; use curl with a browser user-agent instead of WebFetch.
+
+Never rebuild or restart Docker containers without explicit permission. Other processes may be running.
+
+Prefer JetBrains MCP tools (e.g. search_in_files_by_text, get_file_text_by_path, find_files_by_name_keyword, list_directory_tree) over spawning Task/Explore agents when possible to save context.
+
+When opening PRs, always check for a `.github/PULL_REQUEST_TEMPLATE.md` file (or similar) in the repository and fully comply with its format, including all checkboxes, sections, and changelog requirements.
+
+NEVER use `git commit --amend`, `git push --force`, `git push --force-with-lease`, `git rebase`, or `git reset --hard`. Always create new commits instead. If you believe one of these is truly necessary, you MUST stop and ask the user first using AskUserQuestion — do not infer approval from other instructions like "commit this" or "push this". These operations rewrite history and are disruptive.
+
+NEVER use `--no-verify` on regular commits. Only use it for merge conflict resolution commits as specified in project AGENTS.md files. Always let hooks run on normal commits.
+
+Never make up GitHub repository URLs, contributor identifiers, or author attributions. Only use real, verified identifiers that exist in the current project or have been explicitly provided by the user.
+
+Never post comments (PR comments, issue comments, etc.) without explicit approval. "Approve this PR" means only approve it, not add a comment. Ask before posting any public comments.
+
+When I say "resolve the conversation" (or "resolve the comment/thread") on a GitHub PR, I mean collapse the whole review thread via the GraphQL `resolveReviewThread` mutation — not marking an individual comment as resolved, and not just replying. The flow: (1) fetch the thread ID with a GraphQL query on `repository.pullRequest.reviewThreads.nodes.id`; (2) post the reply via `gh api -X POST repos/OWNER/REPO/pulls/N/comments/COMMENT_ID/replies -f body=...`; (3) resolve with `gh api graphql -f query='mutation { resolveReviewThread(input: {threadId: "PRRT_..."}) { thread { isResolved } } }'`. The REST API has no endpoint for this — it's GraphQL-only.
+
+When writing on my behalf (PRs, Linear issues, P2 posts, GitHub comments, documentation, announcements, etc.), follow the style guide in `~/.claude/style-guide.md`.
+
+Never use `@` notation (e.g. `@todo`, `@someone`, `@since`, `@return`, `@param`) in commit messages or in GitHub issues/PRs/comments outside of code blocks. GitHub interprets these as user mentions.
+
+Use "Fixes #123" when the code change completely addresses the issue. Use "See #123" only when more code changes are still needed. Don't downgrade to "See" just because the PR hasn't been tested yet — that's what PR review is for. Never use "Fixes ISSUE-123 (partial)" or similar — Linear/GitHub will still auto-close the issue.
+
+Never combine merge conflict resolution with other changes (e.g. changelog updates, new code) in the same commit. Resolve conflicts in one commit, then make additional changes in separate commits.
+
+When creating branches for Linear issues, end the branch name with the issue ID (e.g. `-ARC-1476`). Linear auto-associates branches that end with the issue ID.
+
+For `gh` CLI commands, use `@me` instead of looking up the GitHub username (e.g. `--assignee @me`, `--author @me`).
+
+NEVER run `pnpm`, `npx`, `npm`, or `node` directly in a Jetpack checkout without explicit permission. Always use `jp` (the Jetpack CLI) which runs commands inside the Docker container. Running package managers directly can destroy the local `node_modules` state.
+
+When I mention "Brad" in a GitHub context, I mean gh user `anomiex`. When I mention "Christopher" in a GitHub context, I mean gh user `ObliviousHarmony`. When I mention "Thomas" in a GitHub context, I mean gh user `tbradsha` (Thomas Bradshaw — never call him Tim). Unless I give more detail indicating someone else.
+
+Do not use the `superpowers:using-git-worktrees` skill. Use native EnterWorktree/ExitWorktree tools or Agent `isolation: "worktree"` instead.

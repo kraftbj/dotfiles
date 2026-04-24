@@ -82,7 +82,7 @@ check_exclusions() {
 }
 
 # SAFETY: Validate target path is allowed
-# Only dotfiles directly under ~ or in ~/.config/ or ~/.claude/
+# Only dotfiles directly under ~ or in approved config directories.
 validate_target() {
     local target="$1"
 
@@ -109,7 +109,7 @@ validate_target() {
                         "Pictures" "Photos" "Library" "code" "Applications"
                         "Public" "Sites")
     for blocked in "${blocked_dirs[@]}"; do
-        if [[ "$target" == *"$blocked"* ]]; then
+        if [[ "$target" == "$blocked" || "$target" == "$blocked/"* || "$target" == *"/$blocked" || "$target" == *"/$blocked/"* ]]; then
             echo "BLOCKED: Cannot touch protected directory '$blocked': $target"
             return 1
         fi
@@ -121,8 +121,8 @@ validate_target() {
     fi
 
     # Allowed patterns (allowlist approach)
-    # Pattern 1: ~/.claude/*
-    if [[ "$target" =~ ^\.claude/ ]]; then
+    # Pattern 1: managed agent config directories.
+    if [[ "$target" =~ ^\.(agents|claude|codex)/ ]]; then
         return 0
     fi
 
@@ -138,7 +138,7 @@ validate_target() {
     fi
 
     echo "BLOCKED: Target does not match allowed patterns: $target"
-    echo "         Allowed: .claude/*, .config/*, or .<filename>"
+    echo "         Allowed: .agents/*, .claude/*, .codex/*, .config/*, or .<filename>"
     return 1
 }
 
@@ -326,11 +326,12 @@ show_dry_run() {
 # Create backup of a file
 create_backup() {
     local file="$1"
+    local rel_path="${file#$HOME/}"
+    local backup_path="$BACKUP_DIR/$rel_path"
     mkdir -p "$BACKUP_DIR"
-    local basename
-    basename=$(basename "$file")
-    cp -a "$file" "$BACKUP_DIR/$basename"
-    echo -e "  Backed up to: ${CYAN}$BACKUP_DIR/$basename${NC}"
+    mkdir -p "$(dirname "$backup_path")"
+    cp -a "$file" "$backup_path"
+    echo -e "  Backed up to: ${CYAN}$backup_path${NC}"
 }
 
 # Handle conflict interactively

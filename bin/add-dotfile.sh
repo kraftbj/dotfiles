@@ -58,12 +58,12 @@ validate_target() {
     fi
 
     # Allowed patterns
-    if [[ "$target" =~ ^\.claude/ ]] || [[ "$target" =~ ^\.config/ ]] || [[ "$target" =~ ^\.[a-zA-Z0-9_-]+$ ]]; then
+    if [[ "$target" =~ ^\.(agents|claude|codex)/ ]] || [[ "$target" =~ ^\.config/ ]] || [[ "$target" =~ ^\.[a-zA-Z0-9_-]+$ ]]; then
         return 0
     fi
 
     echo -e "${RED}Error: Target does not match allowed patterns${NC}"
-    echo "Allowed: .claude/*, .config/*, or .<filename>"
+    echo "Allowed: .agents/*, .claude/*, .codex/*, .config/*, or .<filename>"
     return 1
 }
 

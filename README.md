@@ -16,6 +16,8 @@ License: GPL-2.0-or-later
 │   │   ├── CLAUDE.md          # → ~/.claude/CLAUDE.md
 │   │   ├── statusline.sh      # Status bar script
 │   │   └── hooks/             # Hook scripts
+│   ├── .codex/
+│   │   └── AGENTS.md          # → ~/.codex/AGENTS.md
 │   └── .config/
 │       ├── git/ignore         # → ~/.config/git/ignore
 │       └── zed/settings.json  # → ~/.config/zed/settings.json
@@ -49,7 +51,9 @@ Options:
 The installer uses a strict **allowlist-only** approach:
 
 **Allowed targets:**
+- `~/.agents/*` - Codex/agent skill mirrors
 - `~/.claude/*` - Claude Code config
+- `~/.codex/*` - Codex config
 - `~/.config/*` - XDG config directory
 - `~/.something` - Single dotfiles directly in home
 
@@ -121,3 +125,7 @@ Remove the relevant section in `dotfiles/.claude/settings.json`.
 
 ### Switch to Basic Session Logging
 Change `save-summary` to `save-summary-basic.sh` in settings.json.
+
+### Codex
+- **`.codex/AGENTS.md`** - Global Codex instructions, sharing the Claude style guide at `~/.claude/style-guide.md`
+- **`.agents/skills/*`** - Codex skill targets symlinked from the tracked `.claude/skills/*` sources so Claude and Codex share one copy of each custom skill

@@ -13,6 +13,11 @@
       "description": "Global Claude instructions"
     },
     {
+      "source": "dotfiles/.codex/AGENTS.md",
+      "target": ".codex/AGENTS.md",
+      "description": "Global Codex instructions"
+    },
+    {
       "source": "dotfiles/.gitconfig",
       "target": ".gitconfig",
       "description": "Git configuration with signing, LFS, and sync-all alias"
@@ -56,6 +61,121 @@
       "source": "dotfiles/.claude/skills/daily-digest-post/SKILL.md",
       "target": ".claude/skills/daily-digest-post/SKILL.md",
       "description": "Captain's Log skill — publishes daily summary to kraftcaptainslog, optional fossep2 draft"
+    },
+    {
+      "source": "dotfiles/.claude/skills/daily-digest-post/SKILL.md",
+      "target": ".agents/skills/daily-digest-post/SKILL.md",
+      "description": "Captain's Log skill for Codex/agent skill loader"
+    },
+    {
+      "source": "dotfiles/.claude/skills/wordpress-router",
+      "target": ".claude/skills/wordpress-router",
+      "description": "WordPress router skill for Claude"
+    },
+    {
+      "source": "dotfiles/.claude/skills/wordpress-router",
+      "target": ".agents/skills/wordpress-router",
+      "description": "WordPress router skill for Codex/agent skill loader"
+    },
+    {
+      "source": "dotfiles/.claude/skills/wp-abilities-api",
+      "target": ".claude/skills/wp-abilities-api",
+      "description": "WordPress Abilities API skill for Claude"
+    },
+    {
+      "source": "dotfiles/.claude/skills/wp-abilities-api",
+      "target": ".agents/skills/wp-abilities-api",
+      "description": "WordPress Abilities API skill for Codex/agent skill loader"
+    },
+    {
+      "source": "dotfiles/.claude/skills/wp-block-development",
+      "target": ".claude/skills/wp-block-development",
+      "description": "WordPress block development skill for Claude"
+    },
+    {
+      "source": "dotfiles/.claude/skills/wp-block-development",
+      "target": ".agents/skills/wp-block-development",
+      "description": "WordPress block development skill for Codex/agent skill loader"
+    },
+    {
+      "source": "dotfiles/.claude/skills/wp-block-themes",
+      "target": ".claude/skills/wp-block-themes",
+      "description": "WordPress block themes skill for Claude"
+    },
+    {
+      "source": "dotfiles/.claude/skills/wp-block-themes",
+      "target": ".agents/skills/wp-block-themes",
+      "description": "WordPress block themes skill for Codex/agent skill loader"
+    },
+    {
+      "source": "dotfiles/.claude/skills/wp-interactivity-api",
+      "target": ".claude/skills/wp-interactivity-api",
+      "description": "WordPress Interactivity API skill for Claude"
+    },
+    {
+      "source": "dotfiles/.claude/skills/wp-interactivity-api",
+      "target": ".agents/skills/wp-interactivity-api",
+      "description": "WordPress Interactivity API skill for Codex/agent skill loader"
+    },
+    {
+      "source": "dotfiles/.claude/skills/wp-performance",
+      "target": ".claude/skills/wp-performance",
+      "description": "WordPress performance skill for Claude"
+    },
+    {
+      "source": "dotfiles/.claude/skills/wp-performance",
+      "target": ".agents/skills/wp-performance",
+      "description": "WordPress performance skill for Codex/agent skill loader"
+    },
+    {
+      "source": "dotfiles/.claude/skills/wp-phpstan",
+      "target": ".claude/skills/wp-phpstan",
+      "description": "WordPress PHPStan skill for Claude"
+    },
+    {
+      "source": "dotfiles/.claude/skills/wp-phpstan",
+      "target": ".agents/skills/wp-phpstan",
+      "description": "WordPress PHPStan skill for Codex/agent skill loader"
+    },
+    {
+      "source": "dotfiles/.claude/skills/wp-playground",
+      "target": ".claude/skills/wp-playground",
+      "description": "WordPress Playground skill for Claude"
+    },
+    {
+      "source": "dotfiles/.claude/skills/wp-playground",
+      "target": ".agents/skills/wp-playground",
+      "description": "WordPress Playground skill for Codex/agent skill loader"
+    },
+    {
+      "source": "dotfiles/.claude/skills/wp-plugin-development",
+      "target": ".claude/skills/wp-plugin-development",
+      "description": "WordPress plugin development skill for Claude"
+    },
+    {
+      "source": "dotfiles/.claude/skills/wp-plugin-development",
+      "target": ".agents/skills/wp-plugin-development",
+      "description": "WordPress plugin development skill for Codex/agent skill loader"
+    },
+    {
+      "source": "dotfiles/.claude/skills/wp-project-triage",
+      "target": ".claude/skills/wp-project-triage",
+      "description": "WordPress project triage skill for Claude"
+    },
+    {
+      "source": "dotfiles/.claude/skills/wp-project-triage",
+      "target": ".agents/skills/wp-project-triage",
+      "description": "WordPress project triage skill for Codex/agent skill loader"
+    },
+    {
+      "source": "dotfiles/.claude/skills/wp-wpcli-and-ops",
+      "target": ".claude/skills/wp-wpcli-and-ops",
+      "description": "WordPress WP-CLI and ops skill for Claude"
+    },
+    {
+      "source": "dotfiles/.claude/skills/wp-wpcli-and-ops",
+      "target": ".agents/skills/wp-wpcli-and-ops",
+      "description": "WordPress WP-CLI and ops skill for Codex/agent skill loader"
     },
     {
       "source": "dotfiles/.claude/commands/daily-digest.md",
@@ -112,6 +232,12 @@
       ".RData",
       "*.zwc",
       ".mcp-auth",
+      "auth.json",
+      "history.jsonl",
+      "session_index.jsonl",
+      "installation_id",
+      ".codex-global-state.json*",
+      "*.sqlite*",
       ".npmrc",
       ".yarnrc",
       ".config/gh/hosts.yml",
