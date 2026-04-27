@@ -80,18 +80,25 @@ EOF
     ALLOWED_PREFIXES="feat fix docs style refactor test chore perf ci build revert add update remove"
     HAS_VALID_PREFIX=false
 
-    for prefix in $ALLOWED_PREFIXES; do
-        if echo "$COMMIT_MESSAGE" | grep -q "^$prefix:"; then
-            HAS_VALID_PREFIX=true
-            break
-        fi
-    done
+    # Allow git's native revert prefix (e.g. `Revert "original subject"`).
+    if echo "$COMMIT_MESSAGE" | grep -q "^Revert "; then
+        HAS_VALID_PREFIX=true
+    fi
+
+    if [ "$HAS_VALID_PREFIX" = "false" ]; then
+        for prefix in $ALLOWED_PREFIXES; do
+            if echo "$COMMIT_MESSAGE" | grep -q "^$prefix:"; then
+                HAS_VALID_PREFIX=true
+                break
+            fi
+        done
+    fi
 
     if [ "$HAS_VALID_PREFIX" = "false" ]; then
         cat << EOF
 {
   "decision": "block",
-  "reason": "Invalid commit format!\n\nMust start with one of: feat:, fix:, docs:, style:, refactor:, test:, chore:, perf:, ci:, build:, revert:, add:, update:, remove:\n\nYour message: '$COMMIT_MESSAGE'"
+  "reason": "Invalid commit format!\n\nMust start with one of: feat:, fix:, docs:, style:, refactor:, test:, chore:, perf:, ci:, build:, revert:, add:, update:, remove:, or 'Revert ' (git's native revert prefix)\n\nYour message: '$COMMIT_MESSAGE'"
 }
 EOF
         exit 0
