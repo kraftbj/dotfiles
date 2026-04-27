@@ -24,6 +24,8 @@ When writing on my behalf (PRs, Linear issues, P2 posts, GitHub comments, docume
 
 Never use `@` notation (e.g. `@todo`, `@someone`, `@since`, `@return`, `@param`) in commit messages or in GitHub issues/PRs/comments outside of code blocks. GitHub interprets these as user mentions.
 
+Never use `#` followed by a number (e.g. `#1`, `#123`) unless you intend to cross-link to that exact issue/PR. GitHub, Linear, and P2 auto-linkify `#N` and the link almost always points somewhere wrong (especially when referencing items in a numbered list). Applies everywhere — PRs, issues, comments, commits, P2 posts, Slack, Linear, code review replies. Use "issue 123", "PR 123", "item 3", "the first one", etc. instead. If a literal `#N` is unavoidable in prose, wrap it in an inline code block: `` `#1` ``. This is a hard rule, not a preference — getting it wrong publishes broken cross-references that have to be cleaned up after the fact.
+
 Use "Fixes #123" when the code change completely addresses the issue. Use "See #123" only when more code changes are still needed. Don't downgrade to "See" just because the PR hasn't been tested yet — that's what PR review is for. Never use "Fixes ISSUE-123 (partial)" or similar — Linear/GitHub will still auto-close the issue.
 
 Never combine merge conflict resolution with other changes (e.g. changelog updates, new code) in the same commit. Resolve conflicts in one commit, then make additional changes in separate commits.

@@ -72,6 +72,8 @@ Preferred transition phrases:
 
 - **Never use `@something` notation unless intentionally mentioning a person or team.** Many platforms (GitHub, Slack, Linear, P2) interpret `@` as a mention. Refer to annotations, tags, or syntax constructs without the `@` prefix (e.g., "the `since` tag" not "the `@since` tag") or place them in inline code blocks if the `@` is unavoidable.
 
+- **Never use `#` followed by a number unless you intend to cross-link.** GitHub, Linear, and similar platforms interpret `#123` as a reference to an issue/PR, and the link almost always points somewhere wrong. Write "issue 123", "PR 123", "step 3", or "item 4" instead. If a literal `#` is unavoidable (e.g., quoting code, a heading, or a hex color), put it in inline code: `` `#123` ``. Applies everywhere — PRs, issues, comments, commits, P2 posts, Slack, Linear — not just GitHub.
+
 ### Technical Explanations
 
 - **Provide historical context** when it helps understanding.
