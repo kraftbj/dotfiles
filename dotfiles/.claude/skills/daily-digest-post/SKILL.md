@@ -181,10 +181,14 @@ Also pull recent messages from priority channels in `~/.claude/context-a8c.json`
 For each priority P2 in `~/.claude/context-a8c.json` (`p2s.priority`):
 
 ```
-mcp__plugin_context-a8c_context-a8c__context-a8c-execute-tool(provider: "wpcom", tool: "posts-search", params: { wpcom_site: "<site>", author: "kraftbj", after: "$SINCE", before: "$UNTIL" })
+mcp__plugin_context-a8c_context-a8c__context-a8c-execute-tool(provider: "wpcom", tool: "posts-text", params: { wpcom_site: "<site>", after: "$SINCE", before: "$UNTIL" })
 ```
 
-Also:
+The wpcom provider's tool is `posts-text` (not `posts-search`). It does **not** accept an `author` filter — you must filter on the returned `author` field locally. **Authorship rule for the Writing section:** a post belongs in "Writing" only if its `author` field equals `config.user.wpcom.userId` (numeric, e.g. `2107783`) — exact integer match. Comparing on display name is brittle (different Automatticians can share first names; bylines drift). If `posts-text` doesn't return enough fields to confirm, call `posts.get` on the specific post via `mcp__claude_ai_WordPress_com__wpcom-mcp-content-authoring` and check `author` there.
+
+**A wpcom notification on a post is NOT proof of authorship.** The notifications inbox surfaces likes/comments/mentions on posts you authored *and* on posts you commented on, threads you participated in, mentions of you, blogs you follow, etc. If a post URL only surfaced via the notifications inbox, you must independently verify authorship before placing it in "Writing". If authorship is non-Kraft, the post belongs in **Conversations** (as "Commented on …") or **Reading** — not Writing.
+
+Also pull the notifications inbox for engagement context (likes/comments on your posts, mentions, etc.):
 
 ```
 mcp__plugin_context-a8c_context-a8c__context-a8c-execute-tool(provider: "wpcom", tool: "user-notifications-inbox", params: {})
@@ -310,6 +314,8 @@ Before writing:
 - Applying natural-language window adjustments without echoing the parsed value back.
 - Including verbatim Slack DM text (even internally, DMs are personal — metadata only).
 - Using `gh search prs --state=all` (invalid — omit the flag) or requesting JSON field `mergedAt` (doesn't exist on `gh search prs`; use `closedAt` + `state=="merged"`).
+- **Attributing a P2 post to Kraft because it appeared in the wpcom notifications inbox.** The inbox surfaces engagement on posts Kraft *commented on*, *was mentioned in*, *follows*, etc. — not just posts he authored. A post belongs in **Writing** only after verifying `post.author == config.user.wpcom.userId` (exact integer match). Otherwise it belongs in **Conversations** ("Commented on …") or **Reading**, not Writing. This has misfired more than once; treat any "Kraft authored X" claim as suspect until the integer author ID is confirmed.
+- Calling the wpcom MCP with tool name `posts-search` — it doesn't exist. The actual tool is `posts-text` (and there is no `author` filter param; filter locally).
 
 ## Configuration Notes
 
