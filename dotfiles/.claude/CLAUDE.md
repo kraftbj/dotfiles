@@ -39,3 +39,9 @@ NEVER run `pnpm`, `npx`, `npm`, or `node` directly in a Jetpack checkout without
 When I mention "Brad" in a GitHub context, I mean gh user `anomiex`. When I mention "Christopher" in a GitHub context, I mean gh user `ObliviousHarmony`. When I mention "Thomas" in a GitHub context, I mean gh user `tbradsha` (Thomas Bradshaw — never call him Tim). Unless I give more detail indicating someone else.
 
 Do not use the `superpowers:using-git-worktrees` skill. Use native EnterWorktree/ExitWorktree tools or Agent `isolation: "worktree"` instead.
+
+## gstack
+
+Use the `/browse` skill from gstack for all web browsing. Never use `mcp__claude-in-chrome__*` tools.
+
+Available gstack skills: `/office-hours`, `/plan-ceo-review`, `/plan-eng-review`, `/plan-design-review`, `/design-consultation`, `/design-shotgun`, `/design-html`, `/review`, `/ship`, `/land-and-deploy`, `/canary`, `/benchmark`, `/browse`, `/connect-chrome`, `/qa`, `/qa-only`, `/design-review`, `/setup-browser-cookies`, `/setup-deploy`, `/setup-gbrain`, `/retro`, `/investigate`, `/document-release`, `/codex`, `/cso`, `/autoplan`, `/plan-devex-review`, `/devex-review`, `/careful`, `/freeze`, `/guard`, `/unfreeze`, `/gstack-upgrade`, `/learn`.
