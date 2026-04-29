@@ -68,6 +68,16 @@
       "description": "Captain's Log skill for Codex/agent skill loader"
     },
     {
+      "source": "dotfiles/.claude/skills/reconcile-tracking",
+      "target": ".claude/skills/reconcile-tracking",
+      "description": "Reconcile project tracking across Linear, GitHub, and P2 (FOSSE-flavored, generalizable)"
+    },
+    {
+      "source": "dotfiles/.claude/skills/reconcile-tracking",
+      "target": ".agents/skills/reconcile-tracking",
+      "description": "Reconcile-tracking skill for Codex/agent skill loader"
+    },
+    {
       "source": "dotfiles/.claude/skills/wordpress-router",
       "target": ".claude/skills/wordpress-router",
       "description": "WordPress router skill for Claude"
