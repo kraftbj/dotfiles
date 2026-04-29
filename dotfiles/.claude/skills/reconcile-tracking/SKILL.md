@@ -164,17 +164,24 @@ The response from `load-provider` will include the list of available tools and t
 - (a) fetching a post by URL or ID.
 - (b) fetching comments for a post.
 
-Use those tool names in subsequent `execute-tool` calls. After your first run, update this subsection of SKILL.md with the verified tool names so future runs don't need re-discovery.
+Use those tool names in subsequent `execute-tool` calls.
 
-For each post URL discovered in Step 1, fetch the full post body and its comment thread using the discovered `wpcom` tools.
+**Verified tools (last confirmed 2026-04-29):**
+- Posts: `posts-text` with `{site, ids: [...]}` (paginated mode also supports `after`/`before`).
+- Comments: `content-authoring` with `action: "execute"`, `operation: "comments.list"`, `params: {post: <post_id>, ...}`.
+
+For each post URL discovered in Step 1, fetch the full post body and its comment thread using the verified tools.
+
+**If the wpcom session is dead or comment fetch fails:** do NOT continue running the comment-dependent checks (`P2-LINEAR-MISSING-BACKLINK`, `P2-SETTLED-NO-LINK`) on partial data — back-links may already exist in comments and surfacing missing-back-link drift without checking comments produces false positives. Emit a single `[error]` row in the P2 section noting that comments couldn't be fetched, and suppress those two checks entirely for this run. As a partial fallback before giving up, try MGS search per-DOTCOM-ID restricted by `sites: [254215245]` (fossep2's blog ID) — MGS indexes both posts and comments, so searching for the bare `DOTCOM-NNNN` string reveals whether any P2 post or comment mentions the ID. The same fallback can search for `linear.app radical-month-fosse` to surface project-level back-links. MGS is enough to verify presence/absence but does not return full comment bodies.
 
 **Step 3 — Scanning:**
 
 In each post body and each comment body, scan for:
 - `linear.app/a8c/issue/DOTCOM-\d+` URLs.
 - Bare `DOTCOM-\d+` mentions.
+- `linear.app/a8c/project/[\w-]+` URLs (project-level back-links).
 
-Build a map: `{ post_url → { title, posted_at, last_comment_at, dotcom_refs: [...] } }`.
+Build a map: `{ post_url → { title, posted_at, last_comment_at, dotcom_refs: [...], project_refs: [...] } }`. The `project_refs` list captures any project-level back-links present anywhere in the post body or comments — `P2-LINEAR-MISSING-BACKLINK` treats these as a valid back-link even when no `DOTCOM-\d+` is present, since one project-level link can cover multiple issues that reference the same post.
 
 ### SDD / codebase
 
@@ -355,7 +362,7 @@ Note: inactivity is a heuristic for "settled", not a settlement signal. This che
 
 ### P2-LINEAR-MISSING-BACKLINK
 **Severity**: drift
-**Trigger**: For each Linear issue whose `p2_urls` list is non-empty (i.e. the Linear issue body or comments reference a fossep2 URL), fetch that P2 post from the P2 map. If the P2 post has no `DOTCOM-\d+` mention in its body or comments that matches this Linear issue's ID, emit a finding.
+**Trigger**: For each Linear issue whose `p2_urls` list is non-empty (i.e. the Linear issue body or comments reference a fossep2 URL), fetch that P2 post from the P2 map. Emit a finding only when BOTH conditions hold: (a) the P2 post has no `DOTCOM-\d+` mention in its body or comments that matches this Linear issue's ID, AND (b) the P2 post has no `project_refs` entry (no `linear.app/a8c/project/...` URL in body or comments). A project-level back-link is the recommended form for kickoff/overview/research posts referenced by multiple issues — if one is present, do not emit drift for any of them.
 **Finding payload**: `{ check: "P2-LINEAR-MISSING-BACKLINK", dotcom_id, dotcom_title, post_url, suggested_action: "Post a back-link comment on the P2 post linking to DOTCOM-NNNN." }`
 
 ---
