@@ -117,7 +117,9 @@
     "hookify@claude-plugins-official": true,
     "wordpress.com@claude-plugins-official": true,
     "a8c-url-shorthand@automattic-claude-code-plugins": true,
-    "git-cleanup@trailofbits": true
+    "git-cleanup@trailofbits": true,
+    "coding-tutor@compound-engineering-plugin": true,
+    "compound-engineering@compound-engineering-plugin": true
   },
   "extraKnownMarketplaces": {
     "trailofbits": {
@@ -142,6 +144,18 @@
       "source": {
         "source": "git",
         "url": "git@github.a8c.com:Automattic/jetpack-boost-claude-plugins.git"
+      }
+    },
+    "kraftbj-claude-plugins": {
+      "source": {
+        "source": "github",
+        "repo": "kraftbj/claude-plugins"
+      }
+    },
+    "compound-engineering-plugin": {
+      "source": {
+        "source": "github",
+        "repo": "EveryInc/compound-engineering-plugin"
       }
     }
   },

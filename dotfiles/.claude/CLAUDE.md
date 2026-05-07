@@ -40,8 +40,28 @@ When I mention "Brad" in a GitHub context, I mean gh user `anomiex`. When I ment
 
 Do not use the `superpowers:using-git-worktrees` skill. Use native EnterWorktree/ExitWorktree tools or Agent `isolation: "worktree"` instead.
 
-## gstack
+## Workflow systems — picking the right tool
+
+I have several overlapping "operating systems" loaded (gstack, compound-engineering, sdd, superpowers, agent-os, pr-review-toolkit, feature-dev). Don't mix multiple spines on one task — pick one and supplement.
+
+**Default daily driver:** gstack as the spine, `/ce-code-review` as the reviewer, `/codex` for second opinions, `/ship` to land.
+
+Specifically:
+- **Planning:** Use gstack `/plan-eng-review`, `/plan-ceo-review`, `/plan-design-review`, `/plan-devex-review` (or `/autoplan` to run them all). They critique a plan rather than producing artifacts. For lightweight ideation, `/office-hours`.
+- **Code review:** `/ce-code-review` (compound-engineering) is the daily driver — strict superset of pr-review-toolkit's `/review-pr` (same persona reviewers plus conditional firing and dedup). Chain `/codex` after it on changes that matter (non-Anthropic second opinion catches different bugs). Finish with gstack `/review` as a pre-merge "is this safe to land" gate when applicable.
+- **Shipping:** gstack `/ship` → `/land-and-deploy` for projects set up with `/setup-deploy`. Otherwise `commit-commands:commit-push-pr`. Avoid `ce-commit-push-pr` (redundant).
+- **Debugging:** Always go through gstack `/investigate` for reported bugs. It enforces "no fixes without root cause."
+- **Live verification:** gstack `/qa`, `/qa-only`, `/design-review`, `/canary`, `/browse` are irreplaceable — these actually drive a headless browser. Don't substitute static analysis for them.
+- **Security audits:** gstack `/cso`.
+
+**When to deviate from the default:**
+- Multi-person project with shared conventions → use **agent-os** as the spine (its `.agent-os/standards/` files are the killer feature). Keep `/ce-code-review` + `/codex` for review.
+- Risky/load-bearing work where rigor matters → use **superpowers** as the spine for its TDD-first discipline. Keep `/ce-code-review` + `/codex` for review.
+- Need a written paper trail (handoff, post-mortem, audit) → use **sdd** (`/sdd`, `/sdd-fix`).
+
+**Don't use:**
+- `pr-review-toolkit:review-pr` — `/ce-code-review` does the same job better.
+- `feature-dev` — overlaps with whatever spine you pick.
+- Multiple spines (sdd + superpowers + agent-os) at once — they each produce competing artifact trees.
 
 Use the `/browse` skill from gstack for all web browsing. Never use `mcp__claude-in-chrome__*` tools.
-
-Available gstack skills: `/office-hours`, `/plan-ceo-review`, `/plan-eng-review`, `/plan-design-review`, `/design-consultation`, `/design-shotgun`, `/design-html`, `/review`, `/ship`, `/land-and-deploy`, `/canary`, `/benchmark`, `/browse`, `/connect-chrome`, `/qa`, `/qa-only`, `/design-review`, `/setup-browser-cookies`, `/setup-deploy`, `/setup-gbrain`, `/retro`, `/investigate`, `/document-release`, `/codex`, `/cso`, `/autoplan`, `/plan-devex-review`, `/devex-review`, `/careful`, `/freeze`, `/guard`, `/unfreeze`, `/gstack-upgrade`, `/learn`.
