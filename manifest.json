@@ -18,6 +18,11 @@
       "description": "Global Codex instructions"
     },
     {
+      "source": "dotfiles/.codex/hooks.json",
+      "target": ".codex/hooks.json",
+      "description": "Codex CLI hooks (mirrors Claude's clawdboard Stop hook)"
+    },
+    {
       "source": "dotfiles/.gitconfig",
       "target": ".gitconfig",
       "description": "Git configuration with signing, LFS, and sync-all alias"
