@@ -116,7 +116,7 @@
     "commit-commands@claude-plugins-official": true,
     "hookify@claude-plugins-official": true,
     "wordpress.com@claude-plugins-official": true,
-    "a8c-url-shorthand@automattic-claude-code-plugins": true,
+    "a8c-url-shorthand@automattic-claude-code-plugins": false,
     "git-cleanup@trailofbits": true,
     "coding-tutor@compound-engineering-plugin": true,
     "compound-engineering@compound-engineering-plugin": true
