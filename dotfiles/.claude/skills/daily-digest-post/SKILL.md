@@ -214,13 +214,34 @@ mcp__plugin_context-a8c_context-a8c__context-a8c-load-provider(provider: "mgs")
 
 Don't use it as a primary source — just as a lookup when something's unclear.
 
+**I. Claude Code session summaries (local)**
+
+`~/.claude/session-logs/<session_id>.md` accumulates a Haiku-generated 1–2 paragraph summary at the end of every Claude Code session (via the `SessionEnd` hook). Each file has a `**Directory:**` line indicating the cwd and a `## Summary` body.
+
+Filter by file mtime in `[since, until]`:
+
+```bash
+find ~/.claude/session-logs -name '*.md' -type f \
+  -newermt "$SINCE" -not -newermt "$UNTIL"
+```
+
+For each file in window, parse the `**Directory:**` line and the `## Summary` body. Group by directory.
+
+**How to use this data:** session summaries are *color*, not source of truth. Git commits and PR lists are canonical for "what shipped." Use sessions to:
+
+- Catch work in directories with no commits in the window (dotfiles tweaks, exploration, debugging that didn't land, config changes).
+- Enrich Code section bullets with what the user was actually *doing* (intent, not just diff).
+- Spot work that's purely conversational (planning, reviewing someone else's PR, ideation).
+
+Do **not** list session summaries as standalone bullets — they overlap heavily with git/PR data and Haiku summaries can be noisy. Treat them as background context for the composer.
+
 ### Phase 4 — Light Scrub
 
 Apply only these scrubs to gathered data:
 
-- **Slack DM contents** — omit. Summarize as metadata only ("replied to a DM thread with <teammate> about <topic>" at high level is OK, but no verbatim quotes).
+- **Slack DM contents** — omit. Summarize as metadata only ("replied to a DM thread with <teammate> about <topic>" at high level is OK, but no verbatim quotes). This applies to session summaries too — if a session summary references DM content (e.g. Claude Code read DMs via MCP), drop that part.
 - **Customer-identifying info** — abstract. Customer names, company names, email addresses, billing IDs → use "a customer" / "a store owner" / "an internal report" / etc. (Support ticket IDs are fine to keep — both destinations are internal.)
-- **Credentials** — if anything that looks like a key, token, or password slipped into commit messages / Linear titles / Slack text, STOP and flag it to the user: show the suspect item in context and ask whether it's actually a credential, whether upstream cleanup is needed (e.g. commit history rewrite, key rotation), and only then continue. Do not silently scrub and publish — the fact that it surfaced may indicate a leak that needs follow-up outside this skill.
+- **Credentials** — if anything that looks like a key, token, or password slipped into commit messages / Linear titles / Slack text / session summaries, STOP and flag it to the user: show the suspect item in context and ask whether it's actually a credential, whether upstream cleanup is needed (e.g. commit history rewrite, key rotation), and only then continue. Do not silently scrub and publish — the fact that it surfaced may indicate a leak that needs follow-up outside this skill.
 
 Everything else stays as-is, including: Linear issue IDs and titles, teammate @-mentions, codenames, internal repo paths, github.a8c.com PR URLs, internal P2 post URLs.
 
@@ -318,6 +339,7 @@ Before writing:
 - Using `gh search prs --state=all` (invalid — omit the flag) or requesting JSON field `mergedAt` (doesn't exist on `gh search prs`; use `closedAt` + `state=="merged"`).
 - **Attributing a P2 post to Kraft because it appeared in the wpcom notifications inbox.** The inbox surfaces engagement on posts Kraft *commented on*, *was mentioned in*, *follows*, etc. — not just posts he authored. A post belongs in **Writing** only after verifying `post.author == config.user.wpcom.userId` (exact integer match). Otherwise it belongs in **Conversations** ("Commented on …") or **Reading**, not Writing. This has misfired more than once; treat any "Kraft authored X" claim as suspect until the integer author ID is confirmed.
 - Calling the wpcom MCP with tool name `posts-search` — it doesn't exist. The actual tool is `posts-text` (and there is no `author` filter param; filter locally).
+- **Treating Claude Code session summaries as source of truth.** The summaries are Haiku-generated, sometimes wrong about what actually landed, and frequently describe exploration/abandoned approaches as if they were completed work. Use git/PR data for the canonical "what shipped" claims; use sessions only as background context and for catching repos without commits.
 - **Linking to an x-post URL instead of the originating P2.** If a post's title starts with "X-post:" / slug starts with `xpost-`, that URL is a mirror — find and link to the original. Aggregator P2s (`archp2`, `updateomattic`, `thursdayupdates`, `jetpackp2`) typically host x-posts; the originating P2 is usually a project/team-scoped P2 like `radicalupdates` or `heartofgoldp2`. Add the originating P2 to `p2s.priority` if it isn't there, so this skill can scan it directly rather than discovering it via a mirror.
 
 ## Configuration Notes
