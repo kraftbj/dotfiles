@@ -79,10 +79,14 @@ EOF
     # Check for valid conventional commit prefix
     ALLOWED_PREFIXES="feat fix docs style refactor test chore perf ci build revert add update remove"
     HAS_VALID_PREFIX=false
+    IS_GIT_NATIVE=false
 
-    # Allow git's native revert prefix (e.g. `Revert "original subject"`).
-    if echo "$COMMIT_MESSAGE" | grep -q "^Revert "; then
+    # Allow git's native merge/revert messages (e.g. `Merge branch 'foo' into bar`,
+    # `Merge pull request #123 from owner/branch`, `Revert "original subject"`).
+    # Git generates these, so we exempt them from both the prefix and length rules.
+    if echo "$COMMIT_MESSAGE" | grep -qE "^(Merge|Revert) "; then
         HAS_VALID_PREFIX=true
+        IS_GIT_NATIVE=true
     fi
 
     if [ "$HAS_VALID_PREFIX" = "false" ]; then
@@ -98,22 +102,25 @@ EOF
         cat << EOF
 {
   "decision": "block",
-  "reason": "Invalid commit format!\n\nMust start with one of: feat:, fix:, docs:, style:, refactor:, test:, chore:, perf:, ci:, build:, revert:, add:, update:, remove:, or 'Revert ' (git's native revert prefix)\n\nYour message: '$COMMIT_MESSAGE'"
+  "reason": "Invalid commit format!\n\nMust start with one of: feat:, fix:, docs:, style:, refactor:, test:, chore:, perf:, ci:, build:, revert:, add:, update:, remove:, or git's native 'Merge ' / 'Revert ' prefixes\n\nYour message: '$COMMIT_MESSAGE'"
 }
 EOF
         exit 0
     fi
 
-    # Check length (max 75 characters)
-    MESSAGE_LENGTH=${#COMMIT_MESSAGE}
-    if [ "$MESSAGE_LENGTH" -gt 75 ]; then
-        cat << EOF
+    # Check length (max 75 characters). Skip for git-native merge/revert messages,
+    # whose default format routinely exceeds 75 chars and is not ours to control.
+    if [ "$IS_GIT_NATIVE" = "false" ]; then
+        MESSAGE_LENGTH=${#COMMIT_MESSAGE}
+        if [ "$MESSAGE_LENGTH" -gt 75 ]; then
+            cat << EOF
 {
   "decision": "block",
   "reason": "Commit message too long: $MESSAGE_LENGTH characters (max: 75)"
 }
 EOF
-        exit 0
+            exit 0
+        fi
     fi
 fi
 
