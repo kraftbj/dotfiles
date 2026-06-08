@@ -18,6 +18,8 @@ Never make up GitHub repository URLs, contributor identifiers, or author attribu
 
 Never post comments (PR comments, issue comments, etc.) without explicit approval. "Approve this PR" means only approve it, not add a comment. Ask before posting any public comments.
 
+Exception: when a review thread is fully resolved by landed work (a commit you or someone else pushed genuinely addresses the comment), you may resolve it without asking — post a brief factual reply naming the fixing commit, then collapse the thread via `resolveReviewThread`. This applies only to threads that are actually, completely resolved; if the fix is partial, the comment is a question, or you are unsure it's addressed, still ask first. Never resolve a thread just to clear it.
+
 When I say "resolve the conversation" (or "resolve the comment/thread") on a GitHub PR, I mean collapse the whole review thread via the GraphQL `resolveReviewThread` mutation — not marking an individual comment as resolved, and not just replying. The flow: (1) fetch the thread ID with a GraphQL query on `repository.pullRequest.reviewThreads.nodes.id`; (2) post the reply via `gh api -X POST repos/OWNER/REPO/pulls/N/comments/COMMENT_ID/replies -f body=...`; (3) resolve with `gh api graphql -f query='mutation { resolveReviewThread(input: {threadId: "PRRT_..."}) { thread { isResolved } } }'`. The REST API has no endpoint for this — it's GraphQL-only.
 
 When writing on my behalf (PRs, Linear issues, P2 posts, GitHub comments, documentation, announcements, etc.), follow the style guide in `~/.claude/style-guide.md`.
