@@ -78,8 +78,8 @@ export ZSH="$HOME/.oh-my-zsh"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git git-auto-fetch nvm gh)
 
-# Lazy-load nvm (don't source nvm.sh on shell start; load on first use)
-zstyle ':omz:plugins:nvm' lazy yes
+# Load nvm at shell startup so default-version global bins (e.g. `jp`) are on PATH immediately.
+zstyle ':omz:plugins:nvm' lazy no
 # Auto-switch node version when entering a dir with .nvmrc
 zstyle ':omz:plugins:nvm' autoload yes
 
