@@ -4,7 +4,7 @@
   },
   "permissions": {
     "allow": [
-      "mcp__plugin_context-a8c_context-a8c:*",
+      "mcp__plugin_context-a8c_context-a8c",
       "Read(/Users/kraft/.claude/style-guide.md)",
       "Read(/Users/kraft/code/dotfiles/dotfiles/.claude/style-guide.md)"
     ]
@@ -119,7 +119,9 @@
     "a8c-url-shorthand@automattic-claude-code-plugins": false,
     "git-cleanup@trailofbits": true,
     "coding-tutor@compound-engineering-plugin": true,
-    "compound-engineering@compound-engineering-plugin": true
+    "compound-engineering@compound-engineering-plugin": true,
+    "linear-issue-solver@automattic-claude-code-plugins": true,
+    "systems-review@automattic-claude-code-plugins": true
   },
   "extraKnownMarketplaces": {
     "trailofbits": {
