@@ -42,6 +42,8 @@ When I mention "Brad" in a GitHub context, I mean gh user `anomiex`. When I ment
 
 Do not use the `superpowers:using-git-worktrees` skill. Use native EnterWorktree/ExitWorktree tools or Agent `isolation: "worktree"` instead.
 
+For multi-line comment blocks, use a single block comment (`/* ... */` in C-style languages like PHP, JS/TS, and C) instead of stacking multiple single-line `//` comments. Reserve `//` for genuinely single-line comments. Defer to a file's clearly dominant existing style when it differs.
+
 ## Workflow systems — picking the right tool
 
 I have several overlapping "operating systems" loaded (gstack, compound-engineering, sdd, superpowers, agent-os, pr-review-toolkit, feature-dev). Don't mix multiple spines on one task — pick one and supplement.
