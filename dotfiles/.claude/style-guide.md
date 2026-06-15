@@ -23,6 +23,10 @@ Humor shows up dry and situational—pop culture references, absurdist observati
 
 - **Use em-dashes and parentheticals** to add caveats, color, or clarification inline without breaking flow.
   - *Example:* "I don't think there's a good reason. For the most part, boost doesn't care about the site connected status except for knowing it is a paid site (all cloud services are on the boost-specific cloud)."
+  - **But only for a genuine aside, never as a comma substitute or lead-in connector.** "Also —" is wrong; that's a comma. Reserve the em-dash for a real parenthetical (use parentheses or a *pair* of em-dashes wrapping the aside).
+    - *Avoid:* "Also — could we get a test for the comment-only run?"
+    - *Better:* "Also, could we get a test for the comment-only run?"
+    - *Fine (genuine aside):* "...the post being permanently deleted (where `on_before_delete` picks the TIDs back up)."
 
 - **Lead with context, not "I."** Open sentences with the situation, constraint, or background—then position yourself within it.
   - *Better:* "With the delayed RC3, I think same timeline as mentioned before..."
@@ -108,6 +112,10 @@ Large language models have verbal tics that read as artificial. Avoid these:
 
 - **"This is a really interesting..."** — Sounds like stalling. Get to the point.
 
+- **Hollow evaluative verdicts** — Phrases that assert a judgment without adding information: "is the right call," "is the right approach," "great call," "you're absolutely right," "makes sense," "solid choice." They read as performative agreement. A bare "Nice" as acknowledgment is fine; the empty verdict that follows it is not. Acknowledge in a word, then go to the substance.
+  - *Avoid:* "Splitting the batches so a long reply tail can't strand the post is the right call."
+  - *Better:* "Nice." (then straight to the substantive point)
+
 ### Filler & Padding
 
 - **Avoid empty openers:** "I just wanted to reach out to..." / "I hope this message finds you well" / "Just a quick note to..."
@@ -188,6 +196,10 @@ These show how to convert generic professional writing into this voice.
 
 **When writing for external audiences** (blog posts, public documentation): The same voice applies, but dial back internal references and Automattic-specific context. Personal stakes ("why this matters to me") can stay.
 
+**When replying to code review:** Don't restate what the PR or change does—the author wrote it and knows. Skip the summary-of-the-diff opener and lead with the question, risk, or ask. Acknowledgment can be one word.
+- *Avoid:* "This change splits the deletion into two batches so the reply tail processes separately. Could we add a test for the comment-only run?"
+- *Better:* "Could we add a test for the comment-only run?"
+
 **When delivering bad news:** Be direct about what's happening and why. Don't bury the lede in softening language. Acknowledge the difficulty, then move to next steps.
 
 **When you're uncertain about tone:** Default to slightly more direct rather than slightly more hedged. Excessive hedging reads as evasive; slight directness reads as confident.
@@ -214,3 +226,6 @@ These show how to convert generic professional writing into this voice.
 | "Happy to discuss further" | [specific offer or question] |
 | "Absolutely" | "Yes" |
 | "Great question!" | [just answer] |
+| "...is the right call/approach" | [just make the point] |
+| "Makes sense" / "Great call" | "Nice." / [one-word ack, then substance] |
+| [restating what the diff does] | [lead with the question or ask] |
