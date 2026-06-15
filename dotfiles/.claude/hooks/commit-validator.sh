@@ -7,9 +7,11 @@
 # Features:
 # - Validates conventional commit prefixes
 # - Enforces max length (75 chars)
-# - Blocks force commits (-f, --force, --force-with-lease) as standalone args
-#   (substrings like "upstream-first" or a "-form" in a branch name are fine;
-#   --no-verify is intentionally allowed for merge-conflict commits)
+# - Blocks force commits/pushes (-f, --force, --force-with-lease) as standalone
+#   args, checked only within the git segment(s) of the command (substrings like
+#   "upstream-first" or a "-form" in a branch name are fine, and an unrelated
+#   `rm -f`/`grep -f` chained after the commit doesn't trip it; --no-verify is
+#   intentionally allowed for merge-conflict commits)
 
 # Read JSON input from stdin
 JSON_DATA=$(cat)
@@ -30,12 +32,16 @@ if ! echo "$COMMAND" | grep -q "git commit"; then
     exit 0
 fi
 
-# Block force commits. Match the flag only when it's a standalone argument
-# (preceded by whitespace or line-start, followed by whitespace, '=', or
-# line-end) so substrings like "short-form" in a commit subject or "-form" in
-# a branch name don't trigger a false positive. --no-verify is deliberately
+# Block force commits/pushes. Only inspect the segment(s) that actually invoke
+# git: split the command on shell separators (; && || | newline) and keep the
+# pieces whose command word is `git`. This way an unrelated `rm -f`, `grep -f`,
+# or similar chained alongside the commit (e.g. `git commit ... ; rm -f tmp`)
+# doesn't trip the guard. Within those git segments, match the force flag only
+# as a standalone argument so substrings like "short-form" in a commit subject
+# or "-form" in a branch name don't false-positive. --no-verify is deliberately
 # NOT blocked here — it's the expected tool for merge-conflict commits.
-if echo "$COMMAND" | grep -qE -- "(^|[[:space:]])(-f|--force|--force-with-lease)([[:space:]]|=|$)"; then
+GIT_SEGMENTS=$(printf '%s' "$COMMAND" | tr ';|&\n' '\n\n\n\n' | grep -E "(^|[[:space:]/])git[[:space:]]")
+if printf '%s' "$GIT_SEGMENTS" | grep -qE -- "(^|[[:space:]])(-f|--force|--force-with-lease)([[:space:]]|=|$)"; then
     cat << EOF
 {
   "decision": "block",
@@ -52,8 +58,17 @@ if echo "$COMMAND" | grep -q -- "-m"; then
     if echo "$COMMAND" | grep -q "cat <<'EOF'"; then
         COMMIT_MESSAGE=$(echo "$COMMAND" | sed -n "/cat <<'EOF'/,/EOF/p" | sed "1d;\$d")
     else
-        # Extract message from -m flag
-        COMMIT_MESSAGE=$(echo "$COMMAND" | sed -n 's/.*-m[[:space:]]*"\([^"]*\)".*/\1/p')
+        # Extract the -m message with a multi-line-aware slurp. A line-oriented
+        # sed only matches when the closing quote is on the same line as -m, so
+        # a subject+body message (-m "subject<newline><newline>body") extracted
+        # as empty and silently skipped every check below, including the
+        # @-mention check. perl -0777 slurps the whole command so multi-line
+        # quoted messages are captured. Tries double-quoted first, then single.
+        COMMIT_MESSAGE=$(printf '%s' "$COMMAND" | perl -0777 -ne 'if (/-m\s*"((?:[^"\\]|\\.)*)"/s){print $1} elsif (/-m\s*'\''((?:[^'\''\\]|\\.)*)'\''/s){print $1}' 2>/dev/null)
+        # Fall back to the original line-oriented sed if perl is unavailable.
+        if [ -z "$COMMIT_MESSAGE" ]; then
+            COMMIT_MESSAGE=$(echo "$COMMAND" | sed -n 's/.*-m[[:space:]]*"\([^"]*\)".*/\1/p')
+        fi
         if [ -z "$COMMIT_MESSAGE" ]; then
             COMMIT_MESSAGE=$(echo "$COMMAND" | sed -n "s/.*-m[[:space:]]*'\([^']*\)'.*/\1/p")
         fi
@@ -76,6 +91,10 @@ EOF
         exit 0
     fi
 
+    # Prefix and length rules apply to the subject line only (first line); the
+    # body may legitimately be long and span multiple lines.
+    SUBJECT_LINE=$(printf '%s\n' "$COMMIT_MESSAGE" | head -n1)
+
     # Check for valid conventional commit prefix
     ALLOWED_PREFIXES="feat fix docs style refactor test chore perf ci build revert add update remove"
     HAS_VALID_PREFIX=false
@@ -84,14 +103,14 @@ EOF
     # Allow git's native merge/revert messages (e.g. `Merge branch 'foo' into bar`,
     # `Merge pull request #123 from owner/branch`, `Revert "original subject"`).
     # Git generates these, so we exempt them from both the prefix and length rules.
-    if echo "$COMMIT_MESSAGE" | grep -qE "^(Merge|Revert) "; then
+    if echo "$SUBJECT_LINE" | grep -qE "^(Merge|Revert) "; then
         HAS_VALID_PREFIX=true
         IS_GIT_NATIVE=true
     fi
 
     if [ "$HAS_VALID_PREFIX" = "false" ]; then
         for prefix in $ALLOWED_PREFIXES; do
-            if echo "$COMMIT_MESSAGE" | grep -q "^$prefix:"; then
+            if echo "$SUBJECT_LINE" | grep -q "^$prefix:"; then
                 HAS_VALID_PREFIX=true
                 break
             fi
@@ -111,7 +130,7 @@ EOF
     # Check length (max 75 characters). Skip for git-native merge/revert messages,
     # whose default format routinely exceeds 75 chars and is not ours to control.
     if [ "$IS_GIT_NATIVE" = "false" ]; then
-        MESSAGE_LENGTH=${#COMMIT_MESSAGE}
+        MESSAGE_LENGTH=${#SUBJECT_LINE}
         if [ "$MESSAGE_LENGTH" -gt 75 ]; then
             cat << EOF
 {
