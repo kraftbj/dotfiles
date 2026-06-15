@@ -1,6 +1,6 @@
 ---
 description: Post a "Captain's Log" summary to kraftcaptainslog.wordpress.com covering work since the last captain's log post
-argument-hint: [date] [--since=<ts>] [--until=<ts>] [--dry-run] [--fosse]
+argument-hint: [date] [--since=<ts>] [--until=<ts>] [--dry-run] [--xpost]
 ---
 
 # Daily Digest Post

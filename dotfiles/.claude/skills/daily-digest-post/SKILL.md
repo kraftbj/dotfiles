@@ -1,13 +1,13 @@
 ---
 name: daily-digest-post
-description: Use when writing a "Captain's Log" post to kraftcaptainslog.wordpress.com summarizing work since the last captain's log post. Optionally prepares a FOSSE-scoped draft for fossep2.wordpress.com. Triggers on "captain's log", "daily digest post", "write up my day", or "/daily-digest".
+description: Use when writing a "Captain's Log" post to kraftcaptainslog.wordpress.com summarizing work since the last captain's log post. Can also prepare a DRAFT cross-post to a configured project P2 (none configured right now — the cross-post scaffold is dormant). Triggers on "captain's log", "daily digest post", "write up my day", or "/daily-digest".
 ---
 
 # Daily Digest Post ("Captain's Log")
 
-Publishes a summary post to `kraftcaptainslog.wordpress.com` (an **internal** Automattic site) covering work since the last captain's log post. Optionally prepares a DRAFT cross-post on `fossep2.wordpress.com` scoped to FOSSE-related work.
+Publishes a summary post to `kraftcaptainslog.wordpress.com` (an **internal** Automattic site) covering work since the last captain's log post. Can also prepare a DRAFT cross-post on a configured project P2, scoped to that project's work. **No project P2 is configured right now** — the cross-post scaffold below is dormant and only fires if a target is added back to this skill.
 
-**Both destinations are internal to Automattic.** Internal context is fine: Linear IDs, teammate names, internal repo paths, codenames, internal P2 content, github.a8c.com PRs. No public-audience scrub is needed.
+**Both kraftcaptainslog and any project-P2 cross-post target are internal to Automattic.** Internal context is fine: Linear IDs, teammate names, internal repo paths, codenames, internal P2 content, github.a8c.com PRs. No public-audience scrub is needed.
 
 ## Core Principles
 
@@ -15,7 +15,7 @@ Publishes a summary post to `kraftcaptainslog.wordpress.com` (an **internal** Au
 - **Present before writing.** Show the composed post and wait for go-ahead before any WP.com write.
 - **Idempotent.** Never double-publish. Never silently overwrite an existing draft — surface and ask.
 - **Minimal scrub.** Drop Slack DM contents and abstract customer-identifying info; otherwise include internal specifics.
-- **Publish to kraftcaptainslog, draft-only for fossep2.** The primary post goes live after user confirms. The FOSSE cross-post is always DRAFT — let the user publish it from the WP.com UI after review.
+- **Publish to kraftcaptainslog, draft-only for any project-P2 cross-post.** The primary post goes live after user confirms. Any project-P2 cross-post is always DRAFT — let the user publish it from the WP.com UI after review.
 
 ## Activation
 
@@ -29,7 +29,7 @@ Triggers: user asks to post their captain's log, types `/daily-digest`, etc.
 | `--since=<ts>` | Window start override | Last published captain's log's timestamp |
 | `--until=<ts>` | Window end override | See "Window Model" |
 | `--dry-run` | Compose + display locally, no MCP writes | off |
-| `--fosse` | Also prepare a fossep2 cross-post draft | off (offered at end instead) |
+| `--xpost` | Also prepare a project-P2 cross-post draft (no-op while no target is configured) | off |
 
 ## Window Model
 
@@ -77,7 +77,7 @@ Before gathering, check if there's already:
 - A **published** captain's log post whose title contains the target date → STOP, tell user, exit.
 - A **draft** captain's log post whose title contains the target date → tell user the draft exists, ask: *"Keep drafting on top of it, delete it and start fresh, or abort?"*
 
-Do the same check on fossep2 **only if** the user opted into the FOSSE cross-post.
+Do the same check on the project-P2 cross-post target **only if** one is configured and the user opted into the cross-post.
 
 Detect "this skill's posts" by tag = `captains-log` OR title prefix `Captain's Log`.
 
@@ -87,7 +87,7 @@ Detect "this skill's posts" by tag = `captains-log` OR title prefix `Captain's L
 
 - context-a8c: `mcp__plugin_context-a8c_context-a8c__context-a8c-load-provider` and `mcp__plugin_context-a8c_context-a8c__context-a8c-execute-tool`
 - Linear: `mcp__linear__list_issues`, `mcp__linear__get_issue`, `mcp__linear__list_comments`, etc. — **Linear is a separate MCP, not a context-a8c provider.**
-- WP.com (for reading/writing kraftcaptainslog and fossep2 posts directly): `mcp__claude_ai_WordPress_com__wpcom-mcp-content-authoring`
+- WP.com (for reading/writing kraftcaptainslog and any project-P2 cross-post posts directly): `mcp__claude_ai_WordPress_com__wpcom-mcp-content-authoring`
 
 **Available context-a8c providers:** `slack`, `wpcom`, `github`, `github-a8c` (internal GHE), `mgs`, `matticspace`, `teamcity`, `jetpack`, `fieldguide`, `opengrok`, `team-activity`, `datadog`, `anonymattic`. No `linear` provider.
 
@@ -262,7 +262,7 @@ Everything else stays as-is, including: Linear issue IDs and titles, teammate @-
 
 **Project-P2 cross-post drafts (optional, DRAFT only):**
 
-Applies to any project P2 (currently only `fossep2.wordpress.com`, but the same rules apply if more are added).
+Applies to any configured project-P2 cross-post target. **No target is configured right now**, so this section is dormant — skip it unless a target has been added back to this skill (see "Configuration Notes"). The rules below apply when a target exists.
 
 - **It's Kraft's personal daily digest, sliced to the project's scope** — not a team-wide recap or a formal project report. A team-wide weekly would be a separate skill.
 - Title: `Kraft's Daily Digest — YYYY-MM-DD (<project> slice)` (date = title date from the Window Model). Do NOT use "Week N" or team-weekly framing.
@@ -276,9 +276,9 @@ Applies to any project P2 (currently only `fossep2.wordpress.com`, but the same 
 Before any WP.com write:
 
 1. Show the composed kraftcaptainslog post in full.
-2. If the FOSSE cross-post is being prepared, show it too.
+2. If a project-P2 cross-post is being prepared, show it too.
 3. Note anything dropped in the scrub (e.g., *"Omitted 2 DM contents, abstracted 1 customer name."*) — short, one line.
-4. Ask: *"Publish to kraftcaptainslog?"* and *"Save fossep2 draft?"* if applicable.
+4. Ask: *"Publish to kraftcaptainslog?"* and *"Save the project-P2 draft?"* if applicable.
 
 Only proceed to Phase 7 after the user confirms. In `--dry-run` mode, STOP here.
 
@@ -289,8 +289,7 @@ Use `mcp__claude_ai_WordPress_com__wpcom-mcp-content-authoring` (or context-a8c'
 **Cross-cutting tag rule.** Every post this skill creates **except the kraftcaptainslog post** gets the `dailylog` tag (in addition to any per-destination tags below). Captainslog uses `captains-log` as its primary skill-detection tag and does NOT get `dailylog`. If `dailylog` doesn't exist yet on a target site, create it.
 
 - **kraftcaptainslog:** publish (`status: "publish"`). Tag `captains-log`, category `Log`. Do NOT add `dailylog` here.
-- **fossep2:** DRAFT (`status: "draft"`). Tags: `dailylog` + any matching existing fossep2 conventions.
-- **Any future cross-post target:** DRAFT (`status: "draft"`). Tags: `dailylog` + per-target conventions.
+- **Any project-P2 cross-post target:** DRAFT (`status: "draft"`). Tags: `dailylog` + per-target conventions. (None configured right now.)
 
 Report back the published URL (for kraftcaptainslog) and the edit/preview links (for any drafts).
 
@@ -299,7 +298,7 @@ Report back the published URL (for kraftcaptainslog) and the edit/preview links 
 Append a one-line record to `~/.claude/captains-log-history.jsonl`:
 
 ```json
-{"date":"2026-04-20","window":{"since":"...","until":"..."},"kraftcaptainslog":"<post_url>","fossep2_draft":"<edit_url>|null"}
+{"date":"2026-04-20","window":{"since":"...","until":"..."},"kraftcaptainslog":"<post_url>","xpost_draft":"<edit_url>|null"}
 ```
 
 Local audit trail, independent of the WP.com API.
@@ -307,9 +306,9 @@ Local audit trail, independent of the WP.com API.
 ## Publishing Rules
 
 - kraftcaptainslog: `status: "publish"`, tag `captains-log`, category `Log`, author = kraftbj. NO `dailylog` tag here.
-- fossep2 (and any other cross-post target): `status: "draft"`, tag `dailylog` + matching existing per-target conventions, author = kraftbj.
+- Any project-P2 cross-post target: `status: "draft"`, tag `dailylog` + matching existing per-target conventions, author = kraftbj. (No target configured right now.)
 - **`dailylog` tag is required on every non-captainslog post** so all cross-posts are queryable as a single set across project P2s. Create the tag on the target site if it doesn't exist yet.
-- Never publish to fossep2 (or any cross-post target) directly, regardless of user instruction — if the user insists, they can publish from the WP.com UI after review.
+- Never publish to a cross-post target directly, regardless of user instruction — if the user insists, they can publish from the WP.com UI after review.
 - No images in v1.
 - No scheduling in v1.
 
@@ -326,13 +325,13 @@ Before writing:
 - Publishing without showing the composed post for confirmation.
 - Calling MCP `posts-search` without date-range params, then including posts from outside the window.
 - Forgetting the `until` cutoff applies to local git and `gh` data too — not just MCP data.
-- Composing the fossep2 draft from items unrelated to FOSSE.
-- Framing a project-P2 draft (fossep2, etc.) as a team weekly ("Week N: …") or formal project report instead of Kraft's personal daily digest sliced to the project's scope.
+- Composing a project-P2 cross-post draft from items unrelated to that project.
+- Framing a project-P2 cross-post draft as a team weekly ("Week N: …") or formal project report instead of Kraft's personal daily digest sliced to the project's scope.
 - Conflating merged-to-trunk work with in-flight PR work — especially when summarizing a PR's branch commits as if they already landed.
 - Missing merged-by-me / Dependabot PRs because only `--author=@me` + `--reviewed-by=@me` searches ran.
 - **Under-surfacing PR review work.** Reviews are independent work; if you reviewed 6 jetpack PRs and 4 woocommerce PRs in the window, the captain's log should say so plainly — not bury one or two of them inside an "iterated on X" paragraph. Use a Reviews sub-bullet under Code (or its own section when volume warrants) with grouped counts.
 - Keeping an explicit `today` title arg when the window is morning-mode (excludes today's work) — surface the conflict and ask.
-- Calling `wpcom-mcp-content-authoring` with `status: "publish"` on fossep2 (ALWAYS draft).
+- Calling `wpcom-mcp-content-authoring` with `status: "publish"` on a project-P2 cross-post target (ALWAYS draft).
 - Double-publishing because the idempotency check didn't run first.
 - Applying natural-language window adjustments without echoing the parsed value back.
 - Including verbatim Slack DM text (even internally, DMs are personal — metadata only).
@@ -347,11 +346,11 @@ Before writing:
 Reads from `~/.claude/context-a8c.json`:
 - `user.wpcom.username` — post-author filter on P2s (`kraftbj`).
 - `user.slack.username` — Slack search filter (`@kraft`).
-- `p2s.priority` — which P2s to pull activity from (includes `fossep2.wordpress.com`).
+- `p2s.priority` — which P2s to pull activity from.
 - `slack.channels` — which channels to inspect for context.
 - `teams.linear` — which Linear teams are "mine".
 
-To add another cross-post target (beyond fossep2), update this skill — the target list is intentionally not a config knob yet so it stays reviewable.
+To add a project-P2 cross-post target, update this skill — the target list is intentionally not a config knob yet so it stays reviewable. (No target is configured right now; the `--xpost` flag and the cross-post phases are dormant until one is added.)
 
 ## v2 Ideas (out of scope here)
 
@@ -359,4 +358,4 @@ To add another cross-post target (beyond fossep2), update this skill — the tar
 - Scheduled publishing via CronCreate.
 - Tracks event ingestion ("product usage" section).
 - Calendar integration (meetings attended).
-- Auto-detection of additional project P2s (not just FOSSE).
+- Auto-detection of project P2s as cross-post targets.
