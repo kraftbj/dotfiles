@@ -41,6 +41,15 @@
             "command": "$HOME/code/dotfiles/dotfiles/.claude/hooks/commit-validator.sh"
           }
         ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/code/dotfiles/dotfiles/.claude/hooks/comment-style-validator.sh"
+          }
+        ]
       }
     ],
     "Notification": [
