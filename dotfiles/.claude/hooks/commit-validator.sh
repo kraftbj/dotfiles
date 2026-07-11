@@ -5,8 +5,7 @@
 # Place in ~/.claude/hooks/ and reference in your settings.json
 #
 # Features:
-# - Validates conventional commit prefixes
-# - Enforces max length (75 chars)
+# - Enforces max subject length (75 chars)
 # - Blocks force commits/pushes (-f, --force, --force-with-lease) as standalone
 #   args, checked only within the git segment(s) of the command (substrings like
 #   "upstream-first" or a "-form" in a branch name are fine, and an unrelated
@@ -91,44 +90,20 @@ EOF
         exit 0
     fi
 
-    # Prefix and length rules apply to the subject line only (first line); the
-    # body may legitimately be long and span multiple lines.
+    # The length rule applies to the subject line only (first line); the body
+    # may legitimately be long and span multiple lines.
     SUBJECT_LINE=$(printf '%s\n' "$COMMIT_MESSAGE" | head -n1)
 
-    # Check for valid conventional commit prefix
-    ALLOWED_PREFIXES="feat fix docs style refactor test chore perf ci build revert add update remove"
-    HAS_VALID_PREFIX=false
+    # Git's native merge/revert messages (e.g. `Merge branch 'foo' into bar`,
+    # `Merge pull request #123 from owner/branch`, `Revert "original subject"`)
+    # routinely exceed 75 chars and are not ours to control, so exempt them from
+    # the length rule below.
     IS_GIT_NATIVE=false
-
-    # Allow git's native merge/revert messages (e.g. `Merge branch 'foo' into bar`,
-    # `Merge pull request #123 from owner/branch`, `Revert "original subject"`).
-    # Git generates these, so we exempt them from both the prefix and length rules.
     if echo "$SUBJECT_LINE" | grep -qE "^(Merge|Revert) "; then
-        HAS_VALID_PREFIX=true
         IS_GIT_NATIVE=true
     fi
 
-    if [ "$HAS_VALID_PREFIX" = "false" ]; then
-        for prefix in $ALLOWED_PREFIXES; do
-            if echo "$SUBJECT_LINE" | grep -q "^$prefix:"; then
-                HAS_VALID_PREFIX=true
-                break
-            fi
-        done
-    fi
-
-    if [ "$HAS_VALID_PREFIX" = "false" ]; then
-        cat << EOF
-{
-  "decision": "block",
-  "reason": "Invalid commit format!\n\nMust start with one of: feat:, fix:, docs:, style:, refactor:, test:, chore:, perf:, ci:, build:, revert:, add:, update:, remove:, or git's native 'Merge ' / 'Revert ' prefixes\n\nYour message: '$COMMIT_MESSAGE'"
-}
-EOF
-        exit 0
-    fi
-
-    # Check length (max 75 characters). Skip for git-native merge/revert messages,
-    # whose default format routinely exceeds 75 chars and is not ours to control.
+    # Check length (max 75 characters). Skip for git-native merge/revert messages.
     if [ "$IS_GIT_NATIVE" = "false" ]; then
         MESSAGE_LENGTH=${#SUBJECT_LINE}
         if [ "$MESSAGE_LENGTH" -gt 75 ]; then
