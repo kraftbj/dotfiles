@@ -124,14 +124,14 @@
     "security-guidance@claude-plugins-official": true,
     "commit-commands@claude-plugins-official": true,
     "hookify@claude-plugins-official": true,
-    "wordpress.com@claude-plugins-official": true,
     "a8c-url-shorthand@automattic-claude-code-plugins": false,
     "git-cleanup@trailofbits": true,
     "coding-tutor@compound-engineering-plugin": false,
     "compound-engineering@compound-engineering-plugin": true,
     "linear-issue-solver@automattic-claude-code-plugins": true,
     "systems-review@automattic-claude-code-plugins": true,
-    "the-atelier@the-atelier": true
+    "the-atelier@the-atelier": true,
+    "build-with-wordpress@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "trailofbits": {
@@ -178,5 +178,6 @@
     }
   },
   "teammateMode": "auto",
-  "tui": "fullscreen"
+  "tui": "fullscreen",
+  "agentPushNotifEnabled": true
 }

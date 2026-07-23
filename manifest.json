@@ -73,6 +73,16 @@
       "description": "Captain's Log skill for Codex/agent skill loader"
     },
     {
+      "source": "dotfiles/.claude/skills/ce-review-challenge",
+      "target": ".claude/skills/ce-review-challenge",
+      "description": "Reconcile /ce-code-review and /codex outputs through one challenge round"
+    },
+    {
+      "source": "dotfiles/.claude/skills/ce-review-challenge",
+      "target": ".agents/skills/ce-review-challenge",
+      "description": "ce-review-challenge skill for Codex/agent skill loader"
+    },
+    {
       "source": "dotfiles/.claude/skills/reconcile-tracking",
       "target": ".claude/skills/reconcile-tracking",
       "description": "Reconcile project tracking across Linear, GitHub, and P2 (FOSSE-flavored, generalizable)"
