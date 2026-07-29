@@ -37,3 +37,17 @@ NEVER run `pnpm`, `npx`, `npm`, or `node` directly in a Jetpack checkout without
 When I mention "Brad" in a GitHub context, I mean gh user `anomiex`. When I mention "Thomas" in a GitHub context, I mean gh user `tbradsha` (Thomas Bradshaw — never call him Tim). Unless I give more detail indicating someone else.
 
 Do not use the `superpowers:using-git-worktrees` skill. Use native EnterWorktree/ExitWorktree tools or Agent `isolation: "worktree"` instead.
+
+## Reproductions and verification must be faithful
+
+Reproduce the real thing through the real code path. A synthetic stand-in that merely resembles the real output is not a test — it is a restatement of what you already assumed.
+
+Concretely, in WordPress: do NOT hand-write block markup into a static HTML file, apply the CSS, and call the bug fixed. Insert the block the way a user would — through the editor, or via WP-CLI/REST creating a post whose markup WordPress itself renders, on a real install (Playground, Studio, Jurassic Ninja, local Docker, staging). The output you inspect must come out of WordPress, with the real block, real theme, real `theme.json`, real stylesheets, and real enqueue order. Same principle everywhere else: hit the real endpoint instead of a mock shaped the way you expect, run the real build instead of a hand-assembled bundle, exercise the real plugin instead of a snippet that imitates it.
+
+This is a hard rule because a fake reproduction can only ever confirm the assumption that produced it. When that assumption is wrong, the "fix" ships broken, the report gets closed, and I have told colleagues something false. A bug left open is far cheaper than a bug wrongly declared fixed.
+
+So:
+
+- Never say "fixed", "verified", "confirmed", or "works" on the strength of an approximation. State exactly what you ran and exactly what you observed — if the evidence is a hand-built file, say that, and it does not count as verification.
+- If you cannot reproduce faithfully — no test site, no local environment, missing credentials, missing data, feature needs a plan or a multisite — STOP and tell me what you need. I will spin up a proper environment. Asking costs minutes; a false "fixed" costs much more.
+- Approximations are fine for exploring a hypothesis. Label them plainly as unverified sketches and never let one substitute for the real test before the work is called done.
