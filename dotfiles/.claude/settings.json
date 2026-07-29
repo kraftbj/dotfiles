@@ -178,6 +178,7 @@
       "autoUpdate": true
     }
   },
+  "teammateMode": "auto",
   "tui": "fullscreen",
-  "teammateMode": "auto"
+  "agentPushNotifEnabled": true
 }
