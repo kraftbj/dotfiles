@@ -83,3 +83,5 @@ Specifically:
 - Multiple spines (sdd + superpowers + agent-os) at once — they each produce competing artifact trees.
 
 Use the `/browse` skill from gstack for all web browsing. Never use `mcp__claude-in-chrome__*` tools.
+
+Always write American English, never British. "color" not "colour", "sanitize" not "sanitise", "behavior" not "behaviour", "organize" not "organise". Applies everywhere: code, comments, commit messages, PRs, issues, chat, and anything drafted for me to post under my own name.
