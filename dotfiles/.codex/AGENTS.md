@@ -38,7 +38,7 @@ For `gh` CLI commands, use `@me` instead of looking up the GitHub username (e.g.
 
 NEVER run `pnpm`, `npx`, `npm`, or `node` directly in a Jetpack checkout without explicit permission. Always use `jp` (the Jetpack CLI) which runs commands inside the Docker container. Running package managers directly can destroy the local `node_modules` state.
 
-When I mention "Brad" in a GitHub context, I mean gh user `anomiex`. When I mention "Thomas" in a GitHub context, I mean gh user `tbradsha` (Thomas Bradshaw — never call him Tim). When I mention "enej" in a GitHub context, I mean gh user `enejb`. Unless I give more detail indicating someone else.
+When I mention "Brad" in a GitHub context, I mean gh user `anomiex`. When I mention "Thomas" in a GitHub context, I mean gh user `tbradsha` (Thomas Bradshaw — never call him Tim). When I mention "enej" in a GitHub context, I mean gh user `enejb`. When I mention "Jeremy" in a GitHub context, I mean gh user `jeherve`. Unless I give more detail indicating someone else.
 
 Do not use the `superpowers:using-git-worktrees` skill. Use native EnterWorktree/ExitWorktree tools or Agent `isolation: "worktree"` instead.
 
