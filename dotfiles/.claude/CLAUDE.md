@@ -14,6 +14,8 @@ NEVER use `git commit --amend`, `git push --force`, `git push --force-with-lease
 
 NEVER use `--no-verify` on regular commits. Only use it for merge conflict resolution commits as specified in project CLAUDE.md files. Always let hooks run on normal commits.
 
+NEVER run `svn commit` without my explicit permission for that specific commit. This is a hard rule with no exceptions. A commit to plugins.svn.wordpress.org (or any release repository) publishes immediately to every site running the plugin — there is no draft state and no undo. Credentials are often cached, so the commit will succeed silently; the absence of an auth prompt is not a safety net. Stage the changes, verify with `svn status` and `svn diff`, show me what would be committed, then stop and wait. Do not infer approval from an earlier "do it all", from a plan I agreed to, from an answer to a scoping question, or from having asked about a different commit. Each commit needs its own explicit go-ahead.
+
 Never make up GitHub repository URLs, contributor identifiers, or author attributions. Only use real, verified identifiers that exist in the current project or have been explicitly provided by the user.
 
 Never post comments (PR comments, issue comments, etc.) without explicit approval. "Approve this PR" means only approve it, not add a comment. Ask before posting any public comments.
