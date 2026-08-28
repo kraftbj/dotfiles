@@ -256,6 +256,7 @@ Everything else stays as-is, including: Linear issue IDs and titles, teammate @-
 - Title: `Captain's Log, Stardate YYYY-MM-DD` — use the **title date** per the Window Model (yesterday for morning mode, today for end-of-day mode, or the explicit `YYYY-MM-DD` arg if provided).
 - 2–3 sentence lede summarizing the shape of the window.
 - Sections (only include if non-empty): **Code**, **Writing**, **Conversations**, **Reading**, **Misc**. Use sensible judgment; skip sections that would feel like filler.
+- **No personal side projects without explicit approval.** This is a work log. Personal repos and side builds — anything outside Automattic/WordPress work, including personal tooling, hobby apps, and evening builds — are **excluded by default**. Do not add a "Personal projects" section, and do not fold personal work into the lede ("a heavy personal build filled the evenings"). If the gather surfaces personal work you think genuinely belongs, ASK before including it; a bare "publish" is not approval for it. Judge by what the repo is, not where it lives: a repo under `~/code/` or `kraftbj/` can still be work (e.g. `Automattic/*` repos, WordPress.org plugins Kraft maintains for Automattic), and those stay — file them under **Code** or **Misc**, not under a personal heading.
 - **Reviews are work too.** If the gather surfaces 3+ PRs you reviewed but did not author, add a dedicated **Reviews** sub-bullet (or its own section if volume warrants) under Code listing them grouped by repo, with counts. Don't bury review activity inside per-repo authored-work bullets — review work is independent and frequently the largest chunk of a day. Examples: "*Reviewed 6 jetpack PRs (2 approved, 4 with comments). Notable: [#48096] (blog_id injection), [#47723] (CI change-detection).*" Worse pattern: writing a Jetpack code paragraph that mentions one PR you commented on and silently dropping the other five.
 - Bullets, short. Link every mentioned artifact: Linear issues, PRs (both hosts), P2 posts, Slack threads.
 - Tag: `captains-log`. Category: `Log`.
@@ -290,6 +291,8 @@ Use `mcp__claude_ai_WordPress_com__wpcom-mcp-content-authoring` (or context-a8c'
 
 - **kraftcaptainslog:** publish (`status: "publish"`). Tag `captains-log`, category `Log`. Do NOT add `dailylog` here.
 - **Any project-P2 cross-post target:** DRAFT (`status: "draft"`). Tags: `dailylog` + per-target conventions. (None configured right now.)
+
+**Tags need their own call.** `posts.create` and `posts.update` silently drop `tags` whenever `content` is in the same request — the response comes back with `tags: []` and no error. Categories are unaffected. So: create/update the post, then issue a **second, content-free** `posts.update` carrying only `id` and `tags`. Verify `tags` is non-empty in that second response before calling the post done. This matters beyond cosmetics — Phase 2's idempotency check finds this skill's posts by the `captains-log` tag, so an untagged post is a future double-publish waiting to happen. Tags must also be **integer term IDs**, not names: on kraftcaptainslog, `captains-log` is `13420` and the `Log` category is `12657`; look others up with `tags.list` / `categories.list`.
 
 Report back the published URL (for kraftcaptainslog) and the edit/preview links (for any drafts).
 
@@ -335,6 +338,7 @@ Before writing:
 - Double-publishing because the idempotency check didn't run first.
 - Applying natural-language window adjustments without echoing the parsed value back.
 - Including verbatim Slack DM text (even internally, DMs are personal — metadata only).
+- **Adding a "Personal projects" section, or personal side-build color in the lede, without being asked.** Personal repos are excluded by default (see Phase 5). Gathering them is fine — they help you judge how the window was spent — but they do not go in the post unless the user explicitly approves them for that post. Conversely, don't delete genuine Automattic work just because it was filed under a personal-sounding heading: re-file it under Code or Misc instead.
 - Using `gh search prs --state=all` (invalid — omit the flag) or requesting JSON field `mergedAt` (doesn't exist on `gh search prs`; use `closedAt` + `state=="merged"`).
 - **Attributing a P2 post to Kraft because it appeared in the wpcom notifications inbox.** The inbox surfaces engagement on posts Kraft *commented on*, *was mentioned in*, *follows*, etc. — not just posts he authored. A post belongs in **Writing** only after verifying `post.author == config.user.wpcom.userId` (exact integer match). Otherwise it belongs in **Conversations** ("Commented on …") or **Reading**, not Writing. This has misfired more than once; treat any "Kraft authored X" claim as suspect until the integer author ID is confirmed.
 - Calling the wpcom MCP with tool name `posts-search` — it doesn't exist. The actual tool is `posts-text` (and there is no `author` filter param; filter locally).
