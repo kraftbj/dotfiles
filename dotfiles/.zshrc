@@ -78,9 +78,10 @@ export ZSH="$HOME/.oh-my-zsh"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git git-auto-fetch nvm gh)
 
-# Load nvm at shell startup so default-version global bins (e.g. `jp`) are on PATH immediately.
+# Load nvm at shell startup so default-version global bins are on PATH immediately.
 zstyle ':omz:plugins:nvm' lazy no
-# Auto-switch node version when entering a dir with .nvmrc
+# Auto-switch node version when entering a dir with .nvmrc. The Jetpack monorepo
+# pins Node 24 this way, which is what the native `jetpack` CLI expects.
 zstyle ':omz:plugins:nvm' autoload yes
 
 source $ZSH/oh-my-zsh.sh
@@ -119,6 +120,12 @@ export PNPM_HOME="$HOME/Library/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# $PNPM_HOME holds the pnpm binary itself; globally installed commands
+# (`pnpm add --global`, e.g. the `jetpack` CLI) land in $PNPM_HOME/bin.
+case ":$PATH:" in
+  *":$PNPM_HOME/bin:"*) ;;
+  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
 esac
 # pnpm end
 
