@@ -30,13 +30,17 @@ Never use `#` followed by a number (e.g. `#1`, `#123`) unless you intend to cros
 
 Use "Fixes #123" when the code change completely addresses the issue. Use "See #123" only when more code changes are still needed. Don't downgrade to "See" just because the PR hasn't been tested yet — that's what PR review is for. Never use "Fixes ISSUE-123 (partial)" or similar — Linear/GitHub will still auto-close the issue.
 
+Never frame a change as a security fix in public without my explicit authorization for that specific disclosure. This covers branch names, PR titles and descriptions, commit messages, changelog entries, and issue/PR comments — anything that goes public the moment it is pushed. Do not name the vulnerability class, the attack, the affected versions, or the severity, and do not link a private report or advisory. Describe what the code now does ("validate the redirect URL against an allowlist"), not what it prevents. A branch named `fix-xss-in-comments` discloses an unpatched vulnerability to everyone running the software before a fix has shipped — the push itself is the disclosure, and it cannot be taken back. If the security framing seems necessary, stop and ask. Authorization is per-PR: it does not carry to the next one, and permission to say it in the PR is not permission to say it in the public issue or the changelog.
+
 Never combine merge conflict resolution with other changes (e.g. changelog updates, new code) in the same commit. Resolve conflicts in one commit, then make additional changes in separate commits.
 
 When creating branches for Linear issues, end the branch name with the issue ID (e.g. `-ARC-1476`). Linear auto-associates branches that end with the issue ID.
 
 For `gh` CLI commands, use `@me` instead of looking up the GitHub username (e.g. `--assignee @me`, `--author @me`).
 
-NEVER run `pnpm`, `npx`, `npm`, or `node` directly in a Jetpack checkout without explicit permission. Always use `jp` (the Jetpack CLI) which runs commands inside the Docker container. Running package managers directly can destroy the local `node_modules` state.
+Use `jetpack` for Jetpack monorepo tasks — it is the monorepo's own CLI (`tools/cli`, linked globally via `jetpack cli link`) and runs natively on the host, which is far faster than the Docker-backed `jp` wrapper. `jp` is still installed as a fallback, but prefer `jetpack`. Do not run `npm`, `npx`, or `node` directly in a Jetpack checkout; use `jetpack <command>`, or `jetpack pnpm` / `jetpack composer` to reach the underlying tools.
+
+Ask before running a bare `pnpm install` in a Jetpack checkout. The host and the Docker container share one bind-mounted `node_modules`, so installing for one platform replaces the other's native binaries (darwin-arm64 vs linux-arm64) and breaks its builds until reinstalled. The host install is the current one; `jetpack docker phpunit` is unaffected because Composer packages are platform-independent.
 
 When I mention "Brad" in a GitHub context, I mean gh user `anomiex`. When I mention "Thomas" in a GitHub context, I mean gh user `tbradsha` (Thomas Bradshaw — never call him Tim). When I mention "enej" in a GitHub context, I mean gh user `enejb`. When I mention "Jeremy" in a GitHub context, I mean gh user `jeherve`. Unless I give more detail indicating someone else.
 
