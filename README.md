@@ -103,7 +103,6 @@ Shows at bottom of Claude Code: model name, context %, git branch with dirty ind
 
 | Hook | Event | What it does |
 |------|-------|--------------|
-| **notify-waiting.sh** | Stop, Notification | System bell, iTerm2 dock bounce, macOS notification |
 | **session-context.sh** | SessionStart | Injects git status + recent 5 commits into context |
 | **commit-validator.sh** | PreToolUse (Bash) | Enforces conventional commits, blocks `--force` |
 | **save-summary** | SessionEnd | AI-generated session summary saved to `~/.claude/session-logs/` |
@@ -111,14 +110,9 @@ Shows at bottom of Claude Code: model name, context %, git branch with dirty ind
 ## Requirements
 
 - **jq** - JSON processor (required by install.sh and hooks)
-- **terminal-notifier** - macOS notifications: `brew install terminal-notifier`
 - **Python 3 + Claude Agent SDK** - For AI session summaries (auto-creates venv)
 
 ## Customization
-
-### Notification Sound
-Edit `dotfiles/.claude/hooks/notify-waiting.sh` and change `-sound Morse` to any of:
-Basso, Blow, Bottle, Frog, Funk, Glass, Hero, Morse, Ping, Pop, Purr, Sosumi, Submarine, Tink
 
 ### Disable a Hook
 Remove the relevant section in `dotfiles/.claude/settings.json`.

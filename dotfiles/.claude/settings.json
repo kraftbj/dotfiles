@@ -52,35 +52,7 @@
         ]
       }
     ],
-    "Notification": [
-      {
-        "matcher": "idle_prompt",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$HOME/code/dotfiles/dotfiles/.claude/hooks/notify-waiting.sh"
-          }
-        ]
-      },
-      {
-        "matcher": "permission_prompt",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$HOME/code/dotfiles/dotfiles/.claude/hooks/notify-waiting.sh"
-          }
-        ]
-      }
-    ],
     "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "$HOME/code/dotfiles/dotfiles/.claude/hooks/notify-waiting.sh"
-          }
-        ]
-      },
       {
         "hooks": [
           {
