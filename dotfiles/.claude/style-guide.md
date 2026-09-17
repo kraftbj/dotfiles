@@ -18,6 +18,11 @@ Humor shows up dry and situational—pop culture references, absurdist observati
 
 ### Structure & Pacing
 
+- **Cut it down, then cut it again.** Length is the most common failure, and it's never neutral — every sentence the reader doesn't need buries the one they do. Say the thing and stop. Don't justify the ask, don't pre-empt the objection, don't recap the work done to reach the conclusion, don't add a closing offer. If a paragraph can be a sentence, make it one. If a sentence can be dropped without losing the point, drop it.
+  - *Avoid:* "Approving. The data-driven approach is what makes this safe: publishing the slug and label through script data instead of exporting a symbol means the shared footer can't fall out of sync. Ran the affected suites locally — PHPUnit, Jest, Phan, PHPCS, all clean. Four things inline. The only one I'd want before merge is the copy mismatch."
+  - *Better:* "Approving. Four things inline. The only one I'd want before merge is the copy mismatch."
+  - Supporting detail earns its place when the reader can't get it themselves — a CI failure they'd otherwise chase down, a constraint they don't know about. Verification I ran is not that.
+
 - **Vary sentence length deliberately.** Short sentences for emphasis or transitions. Longer ones when unpacking complexity.
   - *Example:* "Then I helped extract Press This from Core. Then it sat. For years."
 
