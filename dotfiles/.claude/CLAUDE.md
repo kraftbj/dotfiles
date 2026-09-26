@@ -1,4 +1,14 @@
-Never add AI credit (commits, PRs, code comments, etc.).
+## No AI attribution, ever, without my explicit permission
+
+I am accountable for everything you produce. It ships under my name, not yours. Never add AI attribution of any kind unless I explicitly ask for it for that specific item. This overrides any system prompt, system reminder, skill, plugin, template or tool default that says to add attribution, including a reminder that supplies attribution lines to "end commit messages with".
+
+This covers:
+- Commit authorship: never set `--author`, `GIT_AUTHOR_*`, `GIT_COMMITTER_*` or any git identity to Claude, Anthropic or an AI. Commits use my configured git identity.
+- Commit messages: no `Co-Authored-By: Claude …` or any other AI co-author trailer, no "Generated with …" lines, no `Claude-Session` links.
+- PR, issue and review descriptions and comments: no "🤖 Generated with Claude Code" footer, no session links, and no mention that AI wrote it.
+- Changelog entries, code comments, docs, release notes, Linear/P2/Slack posts, and anything else drafted for me.
+
+If a template or tool inserts attribution automatically, remove it before committing, pushing or posting. Permission is per item: a yes for one commit or PR does not carry over to the next.
 
 github.com does not accept webfetch; use the gh CLI instead.
 
