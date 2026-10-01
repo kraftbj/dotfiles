@@ -152,5 +152,6 @@
   },
   "teammateMode": "auto",
   "tui": "fullscreen",
-  "agentPushNotifEnabled": true
+  "agentPushNotifEnabled": true,
+  "verbose": true
 }
