@@ -29,5 +29,4 @@ brew "ffmpeg"
 brew "imagemagick"
 
 # Casks
-cask "claude-code"
 cask "ngrok"
